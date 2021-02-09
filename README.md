@@ -3,3 +3,15 @@ Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak Internation
 
 # Structure 
 ![Full steps from prepare to deploy](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/fullsteps.png)
+
+# Environment Setup
+## TensorFlow 2
+## Arduino
+
+# Training and Deploy
+## TensorFlow 2 Training
+## Convert TensorFlow 2 model to TensorFlow Lite
+## Convert TensorFlow Lite to C array
+
+# Deploy to ESP32-CAM
+## Work in Progress
