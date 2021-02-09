@@ -63,6 +63,6 @@ If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your 
 Installing the tensorflow GPU version is quite problematic. Sometimes you binge the output message so you can understand what's wrong in your tensorflow or cudatoolkit. That's why I post the problem I faced (and solved) here.
 
 ### 1. "cudart64_XXX.dll not found" even using TensorFlow GPU
-If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with XXX version.
+If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message is "cudart64_XXX.dll not found", it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with XXX version.
 
 In tensorflow 2.3.0, usually "cudart64_101.dll not found" will appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the newer cudatoolkit versions.
