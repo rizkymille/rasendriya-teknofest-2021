@@ -1,11 +1,13 @@
 # TensorFlow 2 Setup
 TensorFlow is a free and open-source software library for machine learning. This manual is purposed for tensorflow installation reference because installing tensorflow is quite annoying and pain in the ass, especially for GPU version because you need to match version between cuDNN, CUDAtoolkit, Tensorflow-gpu, and even the Python itself. Regardless of the such difficulties, using Tensorflow-gpu is very recommended for performance because it really speeds up your training per-step. In my case it speeds up from 1.2 sec/step (tensorflow-cpu) to 0.3 sec/step (tensorflow-gpu).
+
 ## Installing Anaconda
 To simplify things and managing packages you've installed, we will use Anaconda distribution. Anaconda is a distribution of the Python and R programming languages for scientific computing (data science, machine learning applications, large-scale data processing, predictive analytics, etc.), that aims to simplify package management and deployment. You don't need to install python from python.org because Anaconda comes with python itself.
 
 Download Anaconda from https://www.anaconda.com/products/individual
 
 Follow the installer steps like how you install other applications. **When installing,  check the "add to PATH" option.**
+
 ## Setting up TensorFlow in Anaconda
 Anaconda comes with something called "environment". Environment is the "scope" or "region" of your programming, which contains the python, packages, libraries, and IDEs you need to manage. You can have multiple environments in your computer. This time we will create a new tensorflow environment because tensorflow packages is quite complex and we don't want to mix it with 'base (root)' environment.
 
@@ -21,10 +23,12 @@ Our new tensorflow environment has only default scientific packages from anacond
 
     conda install python=3.8
 We finally have the python. Now to install tensorflow, we must specify which option to install. Tensorflow has 2 option, CPU and GPU. Tensorflow GPU only works in NVIDIA so we need to install CUDA and cuDNN.
+
 ### 1. Installing TensorFlow CPU
 This will install tensorflow 2.3.0 CPU version and it's dependencies automatically:
 
     conda install tensorflow==2.3
+
 ### 2. Installing TensorFlow GPU
 Tensorflow GPU uses CUDA, that's why we need to install cudatoolkit. Simply write:
 
@@ -36,6 +40,7 @@ Now install the cuDNN:
 Finally, install the tensorflow-gpu:
 
     conda install tensorflow-gpu==2.3
+
 ## Testing TensorFlow
 Now, to verify if our tensorflow is working, we need to test it. Open your environment with IDE like VSCode, Spyder, Jupyter, or PyCharm.
 
@@ -56,9 +61,8 @@ If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your 
 
 # Troubleshooting
 Installing the tensorflow GPU version is quite problematic. Sometimes you binge the output message so you can understand what's wrong in your tensorflow or cudatoolkit. That's why I post the problem I faced (and solved) here.
+
 ## 1. "cudart64_XXX.dll not found" even using TensorFlow GPU
 If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with XXX version.
 
 In tensorflow 2.3.0, usually "cudart64_101.dll not found" will appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the newer cudatoolkit versions.
-
-
