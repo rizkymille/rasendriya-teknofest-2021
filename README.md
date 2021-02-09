@@ -1,6 +1,2 @@
 # Rasendriya  
-Rasendriya is a flying wing UAV for Tübitak International Unmanned Aerial Vehicle (UAV) Competition with two mission:  
-Mission 1:  
-Loiter in one point  
-Mission 2:  
-Dropping 2 ball payloads 
+Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak International Unmanned Aerial Vehicle (UAV) Teknofest Competition. For Tubitak 2021, Rasendriya has two missions: Flying in oval track and loiter in one point with small radius, and flying in oval track for 3 laps and dropping two payloads in a designated dropzone. The designated dropzone must be found autonomously by using computer vision system.
