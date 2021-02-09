@@ -17,3 +17,7 @@ Please check: [TensorFlow 2 Local Setup](https://github.com/rizkymille/rasendriy
 
 ## Deploy to ESP32-CAM
 ### Work in Progress
+
+## References
+Vladimirov, Lyudmil. (2020). https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/
+Tanner, Gilbert. https://github.com/TannerGilbert/Tensorflow-Object-Detection-with-Tensorflow-2.0
