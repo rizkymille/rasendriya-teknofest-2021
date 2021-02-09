@@ -10,7 +10,7 @@ Please check: [TensorFlow 2 Local Setup](https://github.com/rizkymille/rasendriy
 ### TensorFlow 2 Object Detection API
 ### Arduino
 
-## Training and Deploy
+## Training Model
 ### TensorFlow 2 Training
 ### Convert TensorFlow 2 model to TensorFlow Lite
 ### Convert TensorFlow Lite to C array
