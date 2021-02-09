@@ -4,4 +4,6 @@ This training instruction will guide you to generate new model which suits to yo
 ## Preparing Dataset
 Please look at: Dataset Workflow
 ## Selecting Pre Trained Model
-TensorFlow 2 has bunch of pre trained m
+Check the models at: [TensorFlow 2 Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
+
+TensorFlow 2 has pre trained models from the repository with varying accuracy and speeds. You must select model according to your usage -- do you want to detect real time or not. In this guide we will use the SSD MobileNet V2 320x320, as it is the model with lowest speed (ms)/inference time.
