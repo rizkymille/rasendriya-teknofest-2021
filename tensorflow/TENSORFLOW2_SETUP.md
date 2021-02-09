@@ -1,5 +1,5 @@
 # TensorFlow 2 Setup
-TensorFlow is a free and open-source software library for machine learning. This manual is purposed for tensorflow installation reference because installing tensorflow is quite annoying and pain in the ass, especially for GPU version because you need to match version between cuDNN, CUDAtoolkit, Tensorflow-gpu, and even the Python itself. Regardless of the such difficulties, using Tensorflow-gpu is very recommended for performance because it really speeds up your training per-step. In my case it speeds up from 1.2 sec/step (tensorflow-cpu) to 0.3 sec/step (tensorflow-gpu).
+TensorFlow 2 is a free and open-source software library for machine learning. This manual is purposed for tensorflow installation reference because installing tensorflow is quite annoying and pain in the ass, especially for GPU version because you need to match version between cuDNN, CUDAtoolkit, Tensorflow-gpu, and even the Python itself. Regardless of the such difficulties, using Tensorflow-gpu is very recommended for performance because it really speeds up your training per-step. In my case it speeds up from 1.2 sec/step (tensorflow-cpu) to 0.3 sec/step (tensorflow-gpu).
 
 ## Installing Anaconda
 To simplify things and managing packages you've installed, we will use Anaconda distribution. Anaconda is a distribution of the Python and R programming languages for scientific computing (data science, machine learning applications, large-scale data processing, predictive analytics, etc.), that aims to simplify package management and deployment. You don't need to install python from python.org because Anaconda comes with python itself.
@@ -8,7 +8,7 @@ Download Anaconda from https://www.anaconda.com/products/individual
 
 Follow the installer steps like how you install other applications. **When installing,  check the "add to PATH" option.**
 
-## Setting up TensorFlow in Anaconda
+## Setting up TensorFlow 2 in Anaconda
 Anaconda comes with something called "environment". Environment is the "scope" or "region" of your programming, which contains the python, packages, libraries, and IDEs you need to manage. You can have multiple environments in your computer. This time we will create a new tensorflow environment because tensorflow packages is quite complex and we don't want to mix it with 'base (root)' environment.
 
 To create a new environment called tensorflow, just open anaconda prompt and write:
@@ -41,7 +41,7 @@ Finally, install the tensorflow-gpu:
 
     conda install tensorflow-gpu==2.3
 
-## Testing TensorFlow
+## Testing TensorFlow 2
 Now, to verify if our tensorflow is working, we need to test it. Open your environment with IDE like VSCode, Spyder, Jupyter, or PyCharm.
 
 Then write this:
