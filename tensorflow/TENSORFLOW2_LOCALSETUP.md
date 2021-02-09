@@ -1,4 +1,4 @@
-# TensorFlow 2 Setup
+# TensorFlow 2 Local Setup
 TensorFlow 2 is a free and open-source software library for machine learning. This manual is purposed for tensorflow installation reference because installing tensorflow is quite annoying and pain in the ass, especially for GPU version because you need to match version between cuDNN, CUDAtoolkit, Tensorflow-gpu, and even the Python itself. Regardless of the such difficulties, using Tensorflow-gpu is very recommended for performance because it really speeds up your training per-step. In my case it speeds up from 1.2 sec/step (tensorflow-cpu) to 0.3 sec/step (tensorflow-gpu).
 
 ## Installing Anaconda
