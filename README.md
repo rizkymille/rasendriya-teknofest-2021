@@ -6,7 +6,7 @@ Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak Internation
 
 ## Environment Setup
 ### TensorFlow 2
-Please check: [TensorFlow 2 Local Setup](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/tensorflow/TENSORFLOW2_LOCALSETUP.md)
+Please check: [TensorFlow 2 Local Setup](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/tensorflow/TF2_LOCALSETUP.md)
 ### TensorFlow 2 Object Detection API
 ### Arduino
 
