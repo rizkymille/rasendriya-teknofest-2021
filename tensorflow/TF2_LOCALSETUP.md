@@ -47,7 +47,7 @@ Finally, install the tensorflow-gpu:
     conda install tensorflow-gpu==2.3
 
 ## Installing TensorFlow 2.4.0
-There's some differences between installing tensorflow 2.3.0 version than tensorflow 2.4.0 version. Those differences are caused by the lack of updates in Anaconda repository, because they ensures the package dependencies aren't conflicting each other -- with the side effect of our tensorflow are lacking latest features. So instead of using 'conda', now we're gonna use the 'pip' installation.
+There's some differences between installing tensorflow 2.3.0 version than tensorflow 2.4.0 version. Those differences are caused by the lack of updates in Anaconda repository, because they ensures the package dependencies aren't conflicting each other -- with the side effect of our tensorflow are lacking latest features. So instead of using `conda`, now we're gonna use the `pip` installation.
 ### 1. Installing TensorFlow CPU
 This will install tensorflow 2.4.0 CPU version:
 
@@ -56,7 +56,7 @@ This will install tensorflow 2.4.0 CPU version:
 Install the tensorflow-gpu first:
 
     pip install tensorflow-gpu=2.4
-Be aware installation with 'pip' doesn't have dependencies management as good as 'conda', you may caught up with some conflicting packages or pip refuses to install some dependencies package later.
+Be aware installation with pip doesn't have dependencies management as good as conda, you may caught up with some conflicting packages or pip refuses to install some dependencies package later.
 
 Now, let's install the cudatoolkit. We are back to using 'conda'. The good news this is the Anaconda may try to resolve our conflicting packages. Write:
 
@@ -64,7 +64,7 @@ Now, let's install the cudatoolkit. We are back to using 'conda'. The good news 
 ### 3. Download cuDNN library from NVIDIA website directly
 Since Anaconda also doesn't have cudnn 8.0 version yet, we're gonna install it manually by downloading the library directly from NVIDIA website. Go to https://developer.nvidia.com/rdp/cudnn-archive, then register NVIDIA Developer Account, and download the cuDNN library. I personally use the **cuDNN v8.0.5 (November 9th, 2020), for CUDA 11.0**.
 
-Extract the downloaded zip, then copy all the files inside 'cuda' folder to 'C:/Users/your_username/.conda/envs/your_env_name/Library'.
+Extract the downloaded zip, then copy all the files inside `cuda` folder to `C:/Users/your_username/.conda/envs/your_env_name/Library`.
 
 ## Testing TensorFlow 2
 Now, to verify if our tensorflow is working, we need to test it. Open your environment with IDE like VSCode, Spyder, Jupyter, or PyCharm.
@@ -90,15 +90,15 @@ If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your 
 ## Troubleshooting
 Installing the tensorflow GPU version is quite problematic. Sometimes you binge the output message so you can understand what's wrong in your tensorflow or cudatoolkit. That's why I post the problem I faced (and solved) here.
 ### 1. "cudart64_XXX.dll not found" even using TensorFlow GPU
-If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with **XXX** version.
+If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has **cudart64_XXX.dll not found**, it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with **XXX** version.
 
-In tensorflow 2.3.0, "cudart64_101.dll not found" may appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the other cudatoolkit versions.
+In tensorflow 2.3.0, **cudart64_101.dll not found** may appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the other cudatoolkit versions.
 ### 2. "cudnn64_X.dll not found" even using TensorFlow GPU
-If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
+If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has "cudart64_XXX.dll not found", it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
 
 In cudatoolkit 11.0, "cudart64_8.dll not found" may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
 ### 3. Some missing packages dependencies on TensorFlow 2.4.0...
-As I mentioned before 'pip' installation doesn't have good dependencies management as Anaconda installation with 'conda'. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
+As I mentioned before pip installation doesn't have good dependencies management as Anaconda installation. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
     
     pip install Cython pycocotools scipy tf-models-official
 ...and that's it. 
