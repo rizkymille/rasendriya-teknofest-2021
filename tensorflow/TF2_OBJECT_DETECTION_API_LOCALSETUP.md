@@ -2,7 +2,7 @@
 TensorFlow 2 Object Detection API is an API for implementing state-of-the-art (SOTA) models to custom object detection usage. We can use those published and proven model and customize it according to our usage. This method is called **Transfer Learning**.
 ## Some Folder Managements...
 Generated files by tensorflow, your datasets, object detection API, pre trained models, etc can be quite messy to manage later. To make things tidier, I recommend you the folder structure I use. Here's my structure:
-  ``
+  ```
   Documents\  
   └─ TensorFlow\  
     └─ models\ (this will be used by TensorFlow Model Garden)  
