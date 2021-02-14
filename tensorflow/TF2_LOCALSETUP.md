@@ -47,7 +47,10 @@ Now, to verify if our tensorflow is working, we need to test it. Open your envir
 Then write this:
 
     import tensorflow as tf
+    tf.__version__
     tf.config.list_physical_devices(device_type=None)
+This will emit tensorflow version installed in your local and the physical device that your tensorflow recognizes in your local.
+
 If the output message has "physical_device:CPU:0" and "physical_device:XLA_CPU:0", it means tensorflow is working with CPU version.
 
 If the output message also has "physical_device:GPU:0" and "physical_device:XLA_GPU:0", it means tensorflow is working with GPU version.
