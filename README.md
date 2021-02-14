@@ -1,6 +1,6 @@
 # Rasendriya  
 ![RasendriyaUAV](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/docs/rasendriya.jpg)
-Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak International Unmanned Aerial Vehicle (UAV) Teknofest Competition. 
+Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak International Unmanned Aerial Vehicle (UAV) Teknofest Competition.
 
 For Tubitak 2021, Rasendriya has two missions: Flying in oval track and loiter in one point with small radius, and flying in oval track for 3 laps while dropping two payloads in a designated dropzone. The designated dropzone must be found autonomously by using computer vision system.
 
@@ -24,7 +24,7 @@ Please look at: [Dataset Workflow](https://github.com/rizkymille/rasendriya-auav
 ### Selecting Pre Trained Model
 Check the models at: [TensorFlow 2 Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
 
-TensorFlow 2 has pre trained models from the repository with varying accuracy and speeds. You must select model according to your usage -- do you want to detect real time or not. In this guide we will use the SSD MobileNet V2 320x320, as it is the model with lowest speed (ms)/inference time.
+TensorFlow 2 has pre trained models from the repository with varying accuracy and speeds. You must select model according to your usage -- whether do you want to detect real time or not. In this guide we will use the SSD MobileNet V2 320x320, as it is the model with lowest speed (ms)/inference time.
 ### Managing File Directories
 ### Setting up pipeline.config
 ### Training
