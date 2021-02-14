@@ -21,7 +21,7 @@ Generated files by tensorflow, your datasets, object detection API, pre trained 
          └─ pre-trained-models\  
          └─ models\ (this will be used as model training folder)  
          └─ exported-models\ (this will be used as exported trained model folder)
-         ```
+   ```
 
 Keep in mind that I will refer to this directory in my documentation later.
 ## Installing TensorFlow Model Garden
