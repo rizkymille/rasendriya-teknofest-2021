@@ -17,11 +17,13 @@ To create a new environment called tensorflow, just open anaconda prompt and wri
 To get into our new tensorflow environment, you must activate it. Write in prompt:
 
     conda activate tensorflow
+Here's the table of versions between tensorflow, python, cudnn, and cuda
 TensorFlow version | Python version	| Compiler | Build tools | cuDNN | CUDA
+ --- | --- | --- | --- | --- | ---
 tensorflow-2.4.0 | 3.6-3.8 | GCC 7.3.1 | Bazel 3.1.0 | 8.0 | 11.0
 tensorflow-2.3.0 | 3.5-3.8 | GCC 7.3.1 | Bazel 3.1.0 | 7.6 | 10.1
 
-This guide will use Python 3.8.5, Tensorflow 2.3.0, Tensorflow-gpu 2.3.0, CUDAtoolkit 10.1, and cuDNN 7.6.5 because those version has tested by me and working as of January 2021.
+This guide will use Python 3.8.5, TensorFlow 2.3.0, TensorFlow-gpu 2.3.0, CUDAtoolkit 10.1, and cuDNN 7.6.5 because those version has tested by me and working as of January 2021.
 
 Our new tensorflow environment has only default scientific packages from anaconda. It didn't even have python. Install the python 3.8.5 version:
 
