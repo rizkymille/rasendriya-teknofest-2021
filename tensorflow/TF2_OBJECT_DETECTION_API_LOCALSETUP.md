@@ -33,7 +33,9 @@ If you want to be fancy and some elite developer/hacker-like, you can use git to
   pip install git
   
 Then, after installation has completed, write this:
+  
   cd C:\Users\Your_Username\Documents\TensorFlow
+  
   git clone https://github.com/tensorflow/models.git
   
 ## Installing Protobuf
