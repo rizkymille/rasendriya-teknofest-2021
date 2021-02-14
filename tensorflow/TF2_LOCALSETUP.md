@@ -108,7 +108,7 @@ In tensorflow 2.3.0, `cudart64_101.dll not found` may appear. It means the Tenso
 If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has `cudart64_XXX.dll not found`, it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
 
 In cudatoolkit 11.0, `cudart64_8.dll not found` may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
-### 3. Some missing packages dependencies on TensorFlow 2.4.0...
+### 3. Some missing packages dependencies on TensorFlow 2.4.0
 As I mentioned before pip installation doesn't have good dependencies management as Anaconda installation. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
   ```
   pip install Cython pycocotools scipy tf-models-official
