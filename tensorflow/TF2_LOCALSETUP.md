@@ -76,9 +76,9 @@ Then write this:
     tf.config.list_physical_devices(device_type=None)
 This will emit tensorflow version installed in your local and the physical device that your tensorflow recognizes in your local.
 
-If the output message has "physical_device:CPU:0" and "physical_device:XLA_CPU:0", it means tensorflow is working with CPU version.
+If the output message has `physical_device:CPU:0` and `physical_device:XLA_CPU:0`, it means tensorflow is working with CPU version.
 
-If the output message also has "physical_device:GPU:0" and "physical_device:XLA_GPU:0", it means tensorflow is working with GPU version.
+If the output message also has "physical_device:GPU:0" and `physical_device:XLA_GPU:0`, it means tensorflow is working with GPU version.
 
 To test it further (for tensorflow GPU version only), let's see number of GPU available:
 
@@ -90,13 +90,13 @@ If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your 
 ## Troubleshooting
 Installing the tensorflow GPU version is quite problematic. Sometimes you binge the output message so you can understand what's wrong in your tensorflow or cudatoolkit. That's why I post the problem I faced (and solved) here.
 ### 1. "cudart64_XXX.dll not found" even using TensorFlow GPU
-If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has **cudart64_XXX.dll not found**, it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with **XXX** version.
+If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has `cudart64_XXX.dll not found`, it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with **XXX** version.
 
-In tensorflow 2.3.0, **cudart64_101.dll not found** may appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the other cudatoolkit versions.
+In tensorflow 2.3.0, `cudart64_101.dll not found` may appear. It means the TensorFlow 2.3.0 still scanning for cudatoolkit 10.1 files, and ignore the other cudatoolkit versions.
 ### 2. "cudnn64_X.dll not found" even using TensorFlow GPU
-If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has "cudart64_XXX.dll not found", it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
+If you open anaconda prompt, write `python`, then write `import tensorflow as tf`, but if the output message has `cudart64_XXX.dll not found`, it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
 
-In cudatoolkit 11.0, "cudart64_8.dll not found" may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
+In cudatoolkit 11.0, `cudart64_8.dll not found` may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
 ### 3. Some missing packages dependencies on TensorFlow 2.4.0...
 As I mentioned before pip installation doesn't have good dependencies management as Anaconda installation. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
     
