@@ -29,11 +29,9 @@ Since tensorflow model garden is continously updating, they dont upload this ont
 Open this link: **https://github.com/tensorflow/models**, then just download it to your directory. Simple.
 ### 2. Using git
 If you want to be fancy and some elite developer/hacker-like, you can use git to clone the repository. Open anaconda prompt, then install git first by writing this:
-
   pip install git
   
 Then, after installation has completed, write this:
-
   cd C:\Users\Your_Username\Documents\TensorFlow
   git clone https://github.com/tensorflow/models.git
   
