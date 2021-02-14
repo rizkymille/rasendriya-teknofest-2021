@@ -64,7 +64,7 @@ Now, let's install the cudatoolkit. We are back to using 'conda'. The good news 
 ### 3. Download cuDNN library from NVIDIA website directly
 Since Anaconda also doesn't have cudnn 8.0 version yet, we're gonna install it manually by downloading the library directly from NVIDIA website. Go to https://developer.nvidia.com/rdp/cudnn-archive, then register NVIDIA Developer Account, and download the cuDNN library. I personally use the **cuDNN v8.0.5 (November 9th, 2020), for CUDA 11.0**.
 
-Extract the downloaded zip, then copy all the files inside **cuda** folder to **C:/Users/your_username/.conda/envs/your_env_name/Library**
+Extract the downloaded zip, then copy all the files inside 'cuda' folder to 'C:/Users/your_username/.conda/envs/your_env_name/Library'.
 
 ## Testing TensorFlow 2
 Now, to verify if our tensorflow is working, we need to test it. Open your environment with IDE like VSCode, Spyder, Jupyter, or PyCharm.
