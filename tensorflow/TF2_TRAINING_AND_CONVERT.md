@@ -1,8 +1,8 @@
 # TensorFlow 2 Training and Convert
-![Inference video](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/tensorflow/inference.gif)  
+![Inference video](docs\inference.gif)  
 This training instruction will guide you to generate new model which suits to your dataset, and converting it to TensorFlow Lite format and C array.
 ## Preparing Dataset
-Please look at: [Dataset Workflow](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/datasets/DATASET_WORKFLOW.md)
+Please look at: [Dataset Workflow](tensorflow\workspace\orange-dropzone-detection\datasets\DATASET_WORKFLOW.md)
 ## Selecting Pre Trained Model
 Check the models at: [TensorFlow 2 Detection Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
 
