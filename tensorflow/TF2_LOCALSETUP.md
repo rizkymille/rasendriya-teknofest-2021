@@ -88,7 +88,7 @@ This will emit tensorflow version installed in your local and the physical devic
 
 If the output message has `physical_device:CPU:0` and `physical_device:XLA_CPU:0`, it means tensorflow is working with CPU version.
 
-If the output message also has "physical_device:GPU:0" and `physical_device:XLA_GPU:0`, it means tensorflow is working with GPU version.
+If the output message also has `physical_device:GPU:0` and `physical_device:XLA_GPU:0`, it means tensorflow is working with GPU version.
 
 To test it further (for tensorflow GPU version only), let's see number of GPU available:
   ```
