@@ -13,11 +13,13 @@ Follow the installer steps like how you install other applications. **When insta
 Anaconda comes with something called "environment". Environment is the "scope" or "region" of your programming, which contains the python, packages, libraries, and IDEs you need to manage. You can have multiple environments in your computer. This time we will create a new tensorflow environment because tensorflow packages is quite complex and we don't want to mix it with 'base (root)' environment.
 
 To create a new environment called tensorflow, just open anaconda prompt and write:
-
-    conda create -n tensorflow
+  ```
+  conda create -n tensorflow
+  ```
 To get into our new tensorflow environment, you must activate it. Write in prompt:
-
-    conda activate tensorflow
+  ```
+  conda activate tensorflow
+  ```
 Here's the table of working versions between TensorFlow, Python, cuDNN and CUDAtoolkit:
 TensorFlow version | Python version	| Compiler | Build tools | cuDNN | CUDAtoolkit
  --- | --- | --- | --- | --- | ---
@@ -27,40 +29,47 @@ tensorflow-2.3.0 | 3.5-3.8 | GCC 7.3.1 | Bazel 3.1.0 | 7.6 | 10.1
 This guide will use Python 3.8.5, TensorFlow 2.3.0, TensorFlow-gpu 2.3.0, CUDAtoolkit 10.1, and cuDNN 7.6.5 because those version has tested by me and working as of January 2021.
 
 Our new tensorflow environment has only default scientific packages from anaconda. It didn't even have python. Install the python 3.8.5 version:
-
-    conda install python=3.8
+  ```
+  conda install python=3.8
+  ```
 We finally have the python. Now to install tensorflow, we must specify which option to install. Tensorflow has 2 option, CPU and GPU. Tensorflow GPU only works in NVIDIA so we need to install CUDA and cuDNN.
 
 ### 1. Installing TensorFlow CPU
 This will install tensorflow 2.3.0 CPU version and it's dependencies automatically:
-
-    conda install tensorflow==2.3
+  ```
+  conda install tensorflow==2.3
+  ```
 ### 2. Installing TensorFlow GPU
 Tensorflow GPU uses CUDA, that's why we need to install cudatoolkit. Simply write:
-
-    conda install cudatoolkit=10.1
+  ```
+  conda install cudatoolkit=10.1
+  ```
 Now install the cuDNN:
-
-    conda install cudnn=7.6.5
+  ```
+  conda install cudnn=7.6.5
+  ```
 Finally, install the tensorflow-gpu:
-
-    conda install tensorflow-gpu==2.3
-
+  ```
+  conda install tensorflow-gpu==2.3
+  ````
 ## Installing TensorFlow 2.4.0
 There's some differences between installing tensorflow 2.3.0 version than tensorflow 2.4.0 version. Those differences are caused by the lack of updates in Anaconda repository, because they ensures the package dependencies aren't conflicting each other -- with the side effect of our tensorflow are lacking latest features. So instead of using `conda`, now we're gonna use the `pip` installation.
 ### 1. Installing TensorFlow CPU
 This will install tensorflow 2.4.0 CPU version:
-
-    pip install tensorflow==2.4
+  ```
+  pip install tensorflow==2.4
+  ```
 ### 2. Installing TensorFlow GPU
 Install the tensorflow-gpu first:
-
-    pip install tensorflow-gpu=2.4
+  ```
+  pip install tensorflow-gpu=2.4
+  ```
 Be aware installation with pip doesn't have dependencies management as good as conda, you may caught up with some conflicting packages or pip refuses to install some dependencies package later.
 
 Now, let's install the cudatoolkit. We are back to using conda installation. The good news is the Anaconda may try to resolve our conflicting packages. Write:
-
-    conda install cudatoolkit=1
+  ```
+  conda install cudatoolkit=1
+  ```
 ### 3. Download cuDNN library from NVIDIA website directly
 Since Anaconda also doesn't have cudnn 8.0 version yet, we're gonna install it manually by downloading the library directly from NVIDIA website. Go to https://developer.nvidia.com/rdp/cudnn-archive, then register NVIDIA Developer Account, and download the cuDNN library. I personally use the **cuDNN v8.0.5 (November 9th, 2020), for CUDA 11.0**.
 
@@ -70,10 +79,11 @@ Extract the downloaded zip, then copy all the files inside `cuda` folder to `C:/
 Now, to verify if our tensorflow is working, we need to test it. Open your environment with IDE like VSCode, Spyder, Jupyter, or PyCharm.
 
 Then write this:
-
-    import tensorflow as tf
-    tf.__version__
-    tf.config.list_physical_devices(device_type=None)
+  ```
+  import tensorflow as tf
+  tf.__version__
+  tf.config.list_physical_devices(device_type=None)
+  ```
 This will emit tensorflow version installed in your local and the physical device that your tensorflow recognizes in your local.
 
 If the output message has `physical_device:CPU:0` and `physical_device:XLA_CPU:0`, it means tensorflow is working with CPU version.
@@ -81,10 +91,11 @@ If the output message has `physical_device:CPU:0` and `physical_device:XLA_CPU:0
 If the output message also has "physical_device:GPU:0" and `physical_device:XLA_GPU:0`, it means tensorflow is working with GPU version.
 
 To test it further (for tensorflow GPU version only), let's see number of GPU available:
-
-    import tensorflow as tf
-    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-    tf.debugging.set_log_device_placement(True)
+  ```
+  import tensorflow as tf
+  print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+  tf.debugging.set_log_device_placement(True)
+  ```
 If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your gpu.
 
 ## Troubleshooting
@@ -99,6 +110,7 @@ If you open anaconda prompt, write `python`, then write `import tensorflow as tf
 In cudatoolkit 11.0, `cudart64_8.dll not found` may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
 ### 3. Some missing packages dependencies on TensorFlow 2.4.0...
 As I mentioned before pip installation doesn't have good dependencies management as Anaconda installation. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
-    
-    pip install Cython pycocotools scipy tf-models-official
-...and that's it. 
+  ```
+  pip install Cython pycocotools scipy tf-models-official
+  ```
+...and that's it.

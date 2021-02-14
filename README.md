@@ -11,6 +11,8 @@ Please check: [TensorFlow 2 Local Setup](https://github.com/rizkymille/rasendriy
 ### TensorFlow 2 Object Detection API
 Please check: [TensorFlow 2 Object Detection API Local Setup](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/tensorflow/TF2_OBJECT_DETECTION_API_LOCALSETUP.md)
 ### Arduino
+#### Work in Progress
+Please check: [Arduino ESP32-CAM Environment Setup](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/arduino/ARDUINO_ENV_SETUP.md)
 
 ## Training Model
 ![Inference video](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/docs/inference.gif)  
