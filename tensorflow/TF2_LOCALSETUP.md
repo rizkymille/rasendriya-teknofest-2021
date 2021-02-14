@@ -89,7 +89,6 @@ If the output "Num GPUs Available: 0" it means tensorflow didn't recognize your 
 
 ## Troubleshooting
 Installing the tensorflow GPU version is quite problematic. Sometimes you binge the output message so you can understand what's wrong in your tensorflow or cudatoolkit. That's why I post the problem I faced (and solved) here.
-
 ### 1. "cudart64_XXX.dll not found" even using TensorFlow GPU
 If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the tensorflow version is not matched with cudatoolkit version, and constantly searching for cudatoolkit with **XXX** version.
 
@@ -98,3 +97,8 @@ In tensorflow 2.3.0, "cudart64_101.dll not found" may appear. It means the Tenso
 If you open anaconda prompt, write 'python', then write 'import tensorflow as tf', but the output message has "cudart64_XXX.dll not found", it means the cudatoolkit version is not matched with cudnn version, and constantly searching for cuda with **X** version.
 
 In cudatoolkit 11.0, "cudart64_8.dll not found" may appear. It means the CUDAtoolkit 11.0 still scanning for cuDNN 8 files, and ignore the other cudnn versions.
+### 3. Some missing packages dependencies on TensorFlow 2.4.0...
+As I mentioned before 'pip' installation doesn't have good dependencies management as Anaconda installation with 'conda'. On my case there's some few packages which weirdly not installed by pip. I'm missing some packages like **Cython, pycocotools, scipy, and tf-models-official**. To resolve this, just write on prompt:
+    
+    pip install Cython pycocotools scipy tf-models-official
+...and that's it. 
