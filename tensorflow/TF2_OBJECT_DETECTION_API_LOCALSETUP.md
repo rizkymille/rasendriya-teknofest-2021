@@ -27,15 +27,17 @@ Keep in my that I will refer to this directory in my documentation later.
 Since tensorflow model garden is continously updating, they dont upload this onto pip package. Instead, we must clone the TensorFlow Model Garden GitHub repository to our local system. There are two ways to do this.
 ### 1. Clone directly from GitHub
 Open this link: **https://github.com/tensorflow/models**, then just download it to your directory.
-![Clone GitHub](C:\Users\Rizky Millennianno\Documents\GitHub\rasendriya-auav-ui\docs\clonegithub.jpg)
+![Clone GitHub](https://github.com/rizkymille/rasendriya-auav-ui/blob/main/docs/clonegithub.jpg)
 Simple.
 ### 2. Using git
 If you want to be fancy and some elite developer/hacker-like, you can use git to clone the repository. Open anaconda prompt, then install git first by writing this:
-
+  ```
   pip install git
+  ```
 Then, after installation has completed, write this:
-
+  ```
   cd C:\Users\Your_Username\Documents\TensorFlow
   git clone https://github.com/tensorflow/models.git
+  ```
 ## Installing Protobuf
 The Tensorflow Object Detection API uses Protobufs to configure model and training parameters. Before the framework can be used, the Protobuf libraries must be downloaded and compiled.
