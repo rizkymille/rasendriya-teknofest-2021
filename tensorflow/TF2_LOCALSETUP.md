@@ -61,7 +61,7 @@ Be aware installation with 'pip' doesn't have dependencies management as good as
 Now, let's install the cudatoolkit. We are back to using 'conda'. The good news this is the Anaconda may try to resolve our conflicting packages. Write:
 
     conda install cudatoolkit=1
-### 3. Download cuDNN library from NVIDIA directly
+### 3. Download cuDNN library from NVIDIA website directly
 Since Anaconda also doesn't have cudnn 8.0 version yet, we're gonna install it manually by downloading the library directly from NVIDIA website. Go to https://developer.nvidia.com/rdp/cudnn-archive, then register NVIDIA Developer Account, and download the cuDNN library. I personally use the **cuDNN v8.0.5 (November 9th, 2020), for CUDA 11.0**.
 
 Extract the downloaded zip, then copy all the files inside **cuda** folder to **C:/Users/your_username/.conda/envs/your_env_name/Library**
