@@ -58,7 +58,7 @@ Install the tensorflow-gpu first:
     pip install tensorflow-gpu=2.4
 Be aware installation with pip doesn't have dependencies management as good as conda, you may caught up with some conflicting packages or pip refuses to install some dependencies package later.
 
-Now, let's install the cudatoolkit. We are back to using 'conda'. The good news this is the Anaconda may try to resolve our conflicting packages. Write:
+Now, let's install the cudatoolkit. We are back to using conda installation. The good news is the Anaconda may try to resolve our conflicting packages. Write:
 
     conda install cudatoolkit=1
 ### 3. Download cuDNN library from NVIDIA website directly
