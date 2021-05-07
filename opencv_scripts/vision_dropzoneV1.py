@@ -46,25 +46,24 @@ def dropzone_detect():
 
     # set lower and upper hsv threshold
     # in red
-    lower = np.array([170, 127, 117], dtype='uint8')
+    lower = np.array([140, 127, 117], dtype='uint8')
     upper = np.array([179, 255, 255],  dtype='uint8')
 
     while True:
     	# pre process
         img = cam.read()
         img = imutils.resize(img, width=400)
-        blur = cv2.GaussianBlur(img, (7, 7), 0)
 
         # color filtering
         # lower, upper = get_threshold() # uncomment to tune HSV range
-        frame = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+        frame = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        frame = cv2.GaussianBlur(frame, (11, 11), 0)
         frame = cv2.inRange(frame, lower, upper)
-        frame = cv2.bitwise_and(blur, blur, mask=frame)
+        frame = cv2.bitwise_and(img, img, mask=frame)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # edge detection using canny
         canny = cv2.Canny(frame, 50, 240)
-        canny = cv2.dilate(canny, np.ones((5,5)), iterations=1)
 
         # circle detection using hough transform
         circles = cv2.HoughCircles(canny, cv2.HOUGH_GRADIENT, 1, 200,
