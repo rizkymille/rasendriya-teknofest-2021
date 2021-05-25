@@ -25,6 +25,5 @@ More to write
 #### ROS Packages
 - MAVROS
 - Imutils
-- ROS PID
 
 #### Build Locally
