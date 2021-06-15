@@ -1,0 +1,3 @@
+uint32 x_dropzone
+uint32 y_dropzone
+float32 cAngle

@@ -2,7 +2,13 @@ import cv2
 import numpy as np
 import time
 import imutils
-from imutils.video import VideoStream
+import argparse
+cfrom imutils.video import VideoStream
+from imutils.video import FPS 
+
+# camera resolution width and height parameters
+width = 640
+height = 480
 
 ''' uncomment to tune color
 def trackbar_callback(val):
@@ -38,21 +44,29 @@ def trackbar():
     cv2.createTrackbar('Upper V', 'Image', 0, 255, trackbar_callback) '''
 
 def dropzone_detect():
+    # parsing arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("integers", metavar='N', type=int, help='Video source address')
+    args = parser.parse_args()
+
+    if args.integers >= 0:
+    	cam = VideoStream(src=args.integers).start()
+    elif args.integers == -1:
+    	cam = VideoStream(usePiCamera=False).start()
     
-    cam = VideoStream(usePiCamera=False).start()
     time.sleep(2.)
 
     # trackbar() # uncomment to tune HSV range
 
-    # set lower and upper hsv threshold
-    # in red
+    # set lower and upper hsv threshold in red
     lower = np.array([170, 127, 117], dtype='uint8')
     upper = np.array([179, 255, 255],  dtype='uint8')
 
     while True:
     	# pre process
         img = cam.read()
-        img = imutils.resize(img, width=400)
+        img_disp = img.copy()
+        #img = imutils.resize(img, width=400)
         blur = cv2.GaussianBlur(img, (7, 7), 0)
 
         # color filtering
@@ -77,14 +91,22 @@ def dropzone_detect():
             for i in circles[0, :]:
         	    center = (i[0], i[1])
         	    # circle center
-        	    cv2.circle(img, center, 1, (255,255,255), 3)
-        	    cv2.putText(img, "center", (i[0] - 20, i[1] - 20),
+        	    cv2.circle(img_disp, center, 1, (255,255,255), 3)
+        	    cv2.putText(img_disp, "center", (i[0] - 20, i[1] - 20),
         	    	cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         	    # circle outline
         	    radius = (i[2])
-        	    cv2.circle(img, center, radius, (0,255,0), 3)
+        	    cv2.circle(img_disp, center, radius, (0,255,0), 3)
+        	    
+        	    # transform pixel coordinate system to screen coordinate system
+        	    cX = i[0] - width/2
+        	    cY = height/2 - i[1]
+        	    cAngle = math.degrees(math.atan2(cX, cY))
+        	    print("x coordinate:", cX)
+        	    print("y coordinate", cY)
+        	    print("angle", cAngle)
 
-        cv2.imshow("Camera", img)
+        cv2.imshow("Camera", img_disp)
         cv2.imshow("Mask", frame)
         cv2.imshow("Canny Edge", canny)
     
