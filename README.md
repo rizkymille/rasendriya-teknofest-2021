@@ -14,7 +14,7 @@ More to write
 - ROS Noetic Ninjemys
 
 #### Companion Computer
-- Ubuntu Minimal 20.04 LTS for Odroid XU4
+- Ubuntu MATE 20.04 LTS for Odroid XU4
 
 #### Desktop
 - Ubuntu 20.04 LTS Focal Fossa
@@ -25,6 +25,29 @@ More to write
 #### ROS Packages
 - MAVROS
 - Imutils
-- ROS PID
 
-#### Build Locally
+### Odroid Headless Setup
+#### SSH
+Install SSH at your local SBC  
+`sudo apt install openssh-server`  
+Check SSH running  
+`sudo systemctl status sshd`  
+`sudo systemctl enable ssh`  
+`sudo systemctl start ssh`  
+
+#### Ngrok
+
+#### vnc Remote Desktop  
+Install vnc server:  
+`sudo apt update`  
+`sudo apt install x11vnc`  
+Run vnc server:  
+`x11vnc -display :0 -auth guess`  
+
+## Accessing Odroid Headless  
+#### SSH  
+Connect your ground control station to vehicle SBC via ssh  
+`ssh device_name@ip_address`  
+For odroid:  
+`ssh odroid@10.107.213.213`  
+
