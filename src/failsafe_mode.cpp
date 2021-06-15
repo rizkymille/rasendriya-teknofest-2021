@@ -9,7 +9,7 @@ int RC_IN_CH3_THRES = 950;
 int RSSI_THRES = 10;
 
 void rc_in_callback(const mavros_msgs::RCIn& rcin_data) {
-	RC_IN_CH3 = rcin_data.channels[3];
+	RC_IN_CH3 = rcin_data.channels[2];
 }
 
 void override_rc_out_callback(const mavros_msgs::OverrideRCIn& override_rcin_data) {
