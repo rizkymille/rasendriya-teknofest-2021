@@ -37,17 +37,17 @@ Check SSH running
 
 #### Ngrok
 
-#### vnc Remote Desktop
-Install vnc server:
-`sudo apt update`
-`sudo apt install x11vnc`
-Run vnc server:
-`x11vnc -display :0 -auth guess`
+#### vnc Remote Desktop  
+Install vnc server:  
+`sudo apt update`  
+`sudo apt install x11vnc`  
+Run vnc server:  
+`x11vnc -display :0 -auth guess`  
 
-## Accessing Odroid Headless
-#### SSH
-Connect your ground control station to vehicle SBC via ssh
-`ssh device_name@ip_address`
-For odroid:
-`ssh odroid@10.107.213.213`
+## Accessing Odroid Headless  
+#### SSH  
+Connect your ground control station to vehicle SBC via ssh  
+`ssh device_name@ip_address`  
+For odroid:  
+`ssh odroid@10.107.213.213`  
 
