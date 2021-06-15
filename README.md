@@ -28,12 +28,12 @@ More to write
 
 ### Odroid Headless Setup
 #### SSH
-Install SSH at your local SBC
-`sudo apt install openssh-server`
-Check SSH running
-`sudo systemctl status sshd`
-`sudo systemctl enable ssh`
-`sudo systemctl start ssh`
+Install SSH at your local SBC  
+`sudo apt install openssh-server`  
+Check SSH running  
+`sudo systemctl status sshd`  
+`sudo systemctl enable ssh`  
+`sudo systemctl start ssh`  
 
 #### Ngrok
 
