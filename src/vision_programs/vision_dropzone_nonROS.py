@@ -101,7 +101,7 @@ def dropzone_detect():
         	    # transform pixel coordinate system to screen coordinate system
         	    cX = i[0] - width/2
         	    cY = height/2 - i[1]
-        	    cAngle = math.degrees(math.atan2(cX, cY))
+        	    cAngle = math.degrees(math.atan2(cY, cX))
         	    print("x coordinate:", cX)
         	    print("y coordinate", cY)
         	    print("angle", cAngle)
