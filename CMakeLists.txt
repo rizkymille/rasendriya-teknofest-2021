@@ -14,13 +14,15 @@ find_package(catkin REQUIRED COMPONENTS
   mavros
   message_generation
   roslaunch
+  sensor_msgs
 )
 
 ## Check all *.launch files in launch directory
 roslaunch_add_file_check(launch)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system) 
+# Boost ini buat threading. Bagus buat dipelajarin!
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -106,15 +108,11 @@ generate_messages(DEPENDENCIES
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES rasendriya
-   CATKIN_DEPENDS message_runtime
-#  DEPENDS system_lib
+    INCLUDE_DIRS include
+    LIBRARIES rasendriya
+    CATKIN_DEPENDS message_runtime
+#    DEPENDS system_lib
 )
-
-## Add class definition
-set(CLASS_DEF
-    src/plane.cpp)
 
 ###########
 ## Build ##
@@ -123,14 +121,17 @@ set(CLASS_DEF
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-	include
-	${catkin_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
+    include
 )
 
+#set(CLASS_DEF
+#    src/plane.cpp)
+
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/rasendriya.cpp
-# )
+add_library(rasendriya
+    src/plane.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -164,16 +165,28 @@ add_dependencies(failsafe_mode
 target_link_libraries(failsafe_mode
     ${catkin_LIBRARIES})
 
+add_executable(test_servo
+    src/test_servo.cpp
+    ${CLASS_DEF})
+add_dependencies(test_servo
+    rasendriya_generate_messages_cpp)
+target_link_libraries(test_servo
+    ${catkin_LIBRARIES})
+
+add_executable(mission_control
+    src/mission_control.cpp
+    src/plane.cpp)
+add_dependencies(mission_control
+    rasendriya_generate_messages_cpp)
+target_link_libraries(mission_control
+    ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
-
-install(DIRECTORY
-launch
-DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
@@ -190,18 +203,23 @@ catkin_install_python(PROGRAMS
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-# )
+#install(TARGETS rasendriya
+#    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#    RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+#)
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+install(DIRECTORY include/rasendriya/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.h"
+    PATTERN ".svn" EXCLUDE
+)
+
+install(DIRECTORY launch
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+    PATTERN ".svn" EXCLUDE
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

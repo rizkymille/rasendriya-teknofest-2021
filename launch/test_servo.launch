@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="test_servo" pkg="rasendriya" type="test_servo" output="screen"/>
+
+</launch>

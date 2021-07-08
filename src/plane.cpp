@@ -1,22 +1,22 @@
 #include "rasendriya/plane.h"
 
+// == CONSTRUCTOR ==
+
 Plane::Plane(){
 	ros::NodeHandle _nh;
-	ros::NodeHandle _nh_priv("~");
 
-	_set_front_servo_client = nh.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command", 1);
-	_set_back_servo_client = nh.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command", 1);
+	_waypoint_push_client = _nh.serviceClient<mavros_msgs::WaypointPush>("/mavros/mission/push");
 
-	_dropzone_target_subscriber = _nh.subscribe("vision_dropzone", 3, &Copter::dropzone_target_callback, this);
-	_gps_coordinate_subscriber = _nh.subscribe("/mavros/global_position/global", 3, gps_callback);
-	_gps_hdg_subscriber = _nh.subscribe("/mavros/global_position/compass_hdg", 1, gps_hdg_callback);
+	_dropzone_target_subscriber = _nh.subscribe("vision_dropzone", 1, &Plane::dropzone_target_callback, this);
+	_gps_coordinate_subscriber = _nh.subscribe("/mavros/global_position/global", 1, &Plane::gps_callback, this);
+	_gps_hdg_subscriber = _nh.subscribe("/mavros/global_position/compass_hdg", 1, &Plane::gps_hdg_callback, this);
 }
+
+// == DESTRUCTOR ==
 
 Plane::~Plane(){
 	ROS_INFO("PLANE IS ERASED!");
 }
-
-
 
 // == CALLBACKS ==
 
@@ -36,36 +36,26 @@ void Plane::gps_hdg_callback(const std_msgs::Float64& gps_hdg_data){
 	_gps_hdg = gps_hdg_data.data;
 }
 
+// == SERVO DROP ==
 
+void Plane::servo_drop_wp(int servo_ch){
+	mavros_msgs::WaypointPush waypoint_push;
+	mavros_msgs::Waypoint wp_drop_servo;
 
-// == SERVO DROPS ==
+	wp_drop_servo.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
+	wp_drop_servo.command = mavros_msgs::CommandCode::DO_SET_SERVO;
+	wp_drop_servo.is_current = false;
+	wp_drop_servo.autocontinue = true;
+	wp_drop_servo.param1 = servo_ch;
+	wp_drop_servo.param2 = 1100;
 
-void Plane::front_servo_drop(){
-	mavros_msgs::CommandLong do_set_front_servo;
-	do_set_front_servo.request.broadcast = true;
-	do_set_front_servo.request.command = mavros_msgs::CommandLong::CMD_DO_SET_SERVO;
-	do_set_front_servo.request.param1 = 7;
-	do_set_front_servo.request.param2 = 1100;
+	waypoint_push.request.waypoints.push_back(wp_drop_servo);
 
-	if(set_front_servo_client.call(do_set_front_servo)){
-		ROS_INFO("FRONT SERVO ENGAGED. DROPPING FRONT PAYLOAD");
+	if(_waypoint_push_client.call(waypoint_push)){
+		ROS_INFO("CHANNEL %d PAYLOAD DROPPING WAYPOINT SENT", servo_ch);
 	}
 	else {
-		ROS_INFO("FAILED TO ENGAGE FRONT SERVO");
+		ROS_INFO("FAILED TO SEND DROPPING WAYPOINT CHANNEL %d PAYLOAD", servo_ch);
 	}
-}
 
-void Plane::back_servo_drop(){
-	mavros_msgs::CommandLong do_set_back_servo;
-	do_set_back_servo.request.broadcast = true;
-	do_set_back_servo.request.command = mavros_msgs::CommandLong::CMD_DO_SET_SERVO;
-	do_set_back_servo.request.param1 = 8;
-	do_set_back_servo.request.param2 = 1100;
-
-	if(set_back_servo_client.call(do_set_back_servo)){
-		ROS_INFO("BACK SERVO ENGAGED. DROPPING BACK PAYLOAD");
-	}
-	else {
-		ROS_INFO("FAILED TO ENGAGE BACK SERVO");
-	}
 }

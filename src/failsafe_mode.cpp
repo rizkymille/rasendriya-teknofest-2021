@@ -14,8 +14,8 @@ void rc_in_callback(const mavros_msgs::RCIn& rcin_data) {
 	RC_IN_CH3 = rcin_data.channels[2];
 }
 
-void radio_status_callback(const mavros_msgs::RadioStatus& radio_status_data) {
-	RSSI = radio_status_data.remrssi;
+void radio_status_callback(const mavros_msgs::RadioStatus& radio_signal_data) {
+	RSSI = radio_signal_data.remrssi;
 }
 
 int main(int argc, char **argv) {
