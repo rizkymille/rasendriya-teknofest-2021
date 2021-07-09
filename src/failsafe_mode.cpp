@@ -33,44 +33,44 @@ int main(int argc, char **argv) {
 
 	ros::Rate rate(30);
 
-	while (ros::ok()) {
+	bool condition = RSSI < RSSI_THRES || RC_IN_CH3 < RC_IN_CH3_THRES;
+
+	while (ros::ok() && !condition) {
 		ros::spinOnce();
 
-		if (RSSI < RSSI_THRES || RC_IN_CH3 < RC_IN_CH3_THRES) {
-			usleep(3000000);
+		usleep(3000000);
 			
-			mavros_msgs::SetMode flight_mode;
-			flight_mode.request.custom_mode = "GUIDED";
+		mavros_msgs::SetMode flight_mode;
+		flight_mode.request.custom_mode = "GUIDED";
 
-			if (set_mode_client.call(flight_mode)) {
-				ROS_INFO("OVERRIDING CONTROL. PLANE AT GUIDED FAILSAFE MODE");
-			}
-			else {
-				ROS_INFO("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
-			}
-
-			mavros_msgs::OverrideRCIn rc_in_override_val;
-			rc_in_override_val.channels[0] = 1100;
-			rc_in_override_val.channels[1] = 1900;
-			rc_in_override_val.channels[2] = 65535;
-			rc_in_override_val.channels[3] = 1100;
-			rc_in_override_val.channels[4] = 65535;
-			rc_in_override_val.channels[5] = 65535;
-			rc_in_override_val.channels[6] = 1900;
-			rc_in_override_val.channels[7] = 1900;
-			rc_override_in_publisher.publish(rc_in_override_val);
-
-			// shut down vision_dropzone.py and mission_control.cpp
-			std_msgs::Int8 vision_flag;
-			vision_flag.data = -1;
-			vision_flag_publisher.publish(vision_flag);
-
-			std_msgs::Int8 mission_flag;
-			mission_flag.data = -1;
-			mission_flag_publisher.publish(mission_flag);
-
-			break;
+		if (set_mode_client.call(flight_mode)) {
+			ROS_INFO("OVERRIDING CONTROL. PLANE AT GUIDED FAILSAFE MODE");
 		}
+		else {
+			ROS_INFO("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
+		}
+
+		mavros_msgs::OverrideRCIn rc_in_override_val;
+		rc_in_override_val.channels[0] = 1100;
+		rc_in_override_val.channels[1] = 1900;
+		rc_in_override_val.channels[2] = 65535;
+		rc_in_override_val.channels[3] = 1100;
+		rc_in_override_val.channels[4] = 65535;
+		rc_in_override_val.channels[5] = 65535;
+		rc_in_override_val.channels[6] = 1900;
+		rc_in_override_val.channels[7] = 1900;
+		rc_override_in_publisher.publish(rc_in_override_val);
+
+		// shut down vision_dropzone.py and mission_control.cpp
+		std_msgs::Int8 vision_flag;
+		vision_flag.data = -1;
+		vision_flag_publisher.publish(vision_flag);
+
+		std_msgs::Int8 mission_flag;
+		mission_flag.data = -1;
+		mission_flag_publisher.publish(mission_flag);
+
+		break;
 
 		rate.sleep();
 	}
