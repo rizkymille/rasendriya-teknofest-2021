@@ -1,9 +1,9 @@
 <launch>
-    
-    <arg name="integers" default="8"/>
 
     <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
-    <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" output="screen"/>
+    <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" />
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
+
+    <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
     
 </launch>

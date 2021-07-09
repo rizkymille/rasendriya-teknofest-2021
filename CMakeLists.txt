@@ -108,7 +108,7 @@ generate_messages(DEPENDENCIES
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-    INCLUDE_DIRS include
+#    INCLUDE_DIRS include
     LIBRARIES rasendriya
     CATKIN_DEPENDS message_runtime
 #    DEPENDS system_lib
@@ -122,16 +122,13 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
     ${catkin_INCLUDE_DIRS}
-    include
+#    include
 )
-
-#set(CLASS_DEF
-#    src/plane.cpp)
 
 ## Declare a C++ library
-add_library(rasendriya
-    src/plane.cpp
-)
+#add_library(rasendriya
+#    src/plane.cpp
+#)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -166,16 +163,14 @@ target_link_libraries(failsafe_mode
     ${catkin_LIBRARIES})
 
 add_executable(test_servo
-    src/test_servo.cpp
-    ${CLASS_DEF})
+    src/test_servo.cpp)
 add_dependencies(test_servo
     rasendriya_generate_messages_cpp)
 target_link_libraries(test_servo
     ${catkin_LIBRARIES})
 
 add_executable(mission_control
-    src/mission_control.cpp
-    src/plane.cpp)
+    src/mission_control.cpp)
 add_dependencies(mission_control
     rasendriya_generate_messages_cpp)
 target_link_libraries(mission_control
@@ -210,11 +205,11 @@ catkin_install_python(PROGRAMS
 #)
 
 ## Mark cpp header files for installation
-install(DIRECTORY include/rasendriya/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-    FILES_MATCHING PATTERN "*.h"
-    PATTERN ".svn" EXCLUDE
-)
+#install(DIRECTORY include/rasendriya/
+#    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+#    FILES_MATCHING PATTERN "*.h"
+#    PATTERN ".svn" EXCLUDE
+#)
 
 install(DIRECTORY launch
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch

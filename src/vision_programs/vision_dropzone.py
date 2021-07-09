@@ -5,30 +5,44 @@ import numpy as np
 import time
 import math
 import imutils
-from imutils.video import VideoStream
 import argparse
+from imutils.video import VideoStream
+from std_msgs.msg import Int8
 
 # camera resolution width and height parameters
 width = 640
 height = 480
 
+def shutdown():
+    print("Vision program shutting down")
+
+def vision_flag_callback(vis_flag):
+    vision_flag = vis_flag.data
+
 def dropzone_detect():
-    # initialize ros node
-    rospy.init_node('vision_dropzone')
-
-    # initialize ros publisher
-    pub = rospy.Publisher('dropzone_detector', Dropzone, queue_size=10)
-    rate = rospy.Rate(30)
-    msg = Dropzone()
-
     # parsing arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("integers", metavar='N', type=int, help='Video source address')
     args = parser.parse_args(rospy.myargv()[1:])
+
     if args.integers >= 0:
         cam = VideoStream(src=args.integers).start()
     elif args.integers == -1:
         cam = VideoStream(usePiCamera=False).start()
+
+    # initialize ros node
+    rospy.init_node('vision_dropzone')
+
+    # initialize ros publisher
+    pub = rospy.Publisher('dropzone_detector', Dropzone, queue_size=3)
+    rate = rospy.Rate(30)
+    msg = Dropzone()
+    
+    # initialize ros subscriber
+    rospy.Subscriber("vision_flag", Int8, vision_flag_callback)
+    
+    # spin
+    rospy.spin()
 
     time.sleep(2.)
 
@@ -36,7 +50,8 @@ def dropzone_detect():
     lower = np.array([170, 127, 117], dtype='uint8')
     upper = np.array([179, 255, 255],  dtype='uint8')
 
-    while not rospy.is_shutdown():
+    while not (rospy.is_shutdown() and vision_flag == -1):
+        
         # pre process
         img = cam.read()
         img_disp = img.copy()
@@ -78,11 +93,12 @@ def dropzone_detect():
                 cX = i[0] - width/2
                 cY = height/2 - i[1]
                 cAngle = math.degrees(math.atan2(cY, cX))
+                # perlu nambah kasus hit_count
                 msg.x_dropzone = cX
                 msg.y_dropzone = cY
                 msg.center_angle = cAngle
 
-        #cv2.imshow("Camera", img)
+        cv2.imshow("Camera", img)
         #cv2.imshow("Mask", frame)
         #cv2.imshow("Canny Edge", canny)
 

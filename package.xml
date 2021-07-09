@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="2.2"?>
 <package format="2">
   <name>rasendriya</name>
   <version>0.1.0</version>
-  <description>ROS package for rasendriya teknofest 2021</description>
+  <description>ROS package for Team Rasendriya AUAV UI in Teknofest 2021</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -20,12 +20,14 @@
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
   <!-- <url type="website">http://wiki.ros.org/rasendriya-teknofest-2021</url> -->
+  <url type="website">https://robotics.ui.ac.id/autonomous-unmanned-aerial-vehicle</url>
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
   <!-- Authors do not have to be maintainers, but could be -->
   <!-- Example: -->
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <author email="muhammad.rizky912@ui.ac.id">rizkymille</author>
 
 
   <!-- The *depend tags are used to specify dependencies -->
@@ -57,12 +59,14 @@
   <build_depend>mavros_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>roslaunch</build_depend>
+  <build_depend>sensor_msgs</build_depend>
 
   <build_export_depend>mavros</build_export_depend>
   <build_export_depend>mavros_msgs</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
   
   <exec_depend>mavros</exec_depend>
   <exec_depend>mavros_msgs</exec_depend>
@@ -70,6 +74,7 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
