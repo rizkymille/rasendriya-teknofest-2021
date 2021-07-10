@@ -12,9 +12,7 @@ from std_msgs.msg import Int8
 # camera resolution width and height parameters
 width = 640
 height = 480
-
-def shutdown():
-    print("Vision program shutting down")
+vision_flag = -1;
 
 def vision_flag_callback(vis_flag):
     vision_flag = vis_flag.data
@@ -93,7 +91,6 @@ def dropzone_detect():
                 cX = i[0] - width/2
                 cY = height/2 - i[1]
                 cAngle = math.degrees(math.atan2(cY, cX))
-                # perlu nambah kasus hit_count
                 msg.x_dropzone = cX
                 msg.y_dropzone = cY
                 msg.center_angle = cAngle

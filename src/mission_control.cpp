@@ -58,6 +58,10 @@ void insert_wp(int _wp_num, mavros_msgs::Waypoint _wp){
 	waypoint_push.request.waypoints.insert(waypoint_push.request.waypoints.begin() + _wp_num, _wp);
 }
 
+void erase_wp(int _wp_num){
+	waypoint_push.request.waypoints.erase(waypoint_push.request.waypoints.begin() + _wp_num);
+}
+
 void servo_drop_wp(int servo_ch, int wp_drop_num){
 	mavros_msgs::Waypoint wp_drop_servo;
 
@@ -99,8 +103,7 @@ struct targetCoordinate calc_drop_coord(){
 
 
 int main(int argc, char **argv) {
-	int wp2_reach_counter = 0;
-	int wp4_reach_counter = 0;
+	int mission_repeat_counter = 0;
 	int hit_count = 0;
 
 	ros::init(argc, argv, "mission_control");
@@ -126,15 +129,11 @@ int main(int argc, char **argv) {
 		ROS_INFO("dropzone x coordinate: %d \ndropzone y coordinate: %d \ncoordinate angle: %f", x_dz, y_dz, cam_angle);
 		ROS_INFO("plane longitude: %f \nplane latitude: %f \nplane altitude: %f \nplane heading: %f", gps_long, gps_lat, alt, gps_hdg);
 		// increase counter if wp3 reached
-		if(waypoint_reached == 2){
-			++wp2_reach_counter;
+		if(waypoint_reached == 1){
+			++mission_repeat_counter;
 		}
-		else if(waypoint_reached == 4){
-			++wp4_reach_counter;
-		}
-
 		// turn on vision node when wp3 has reached
-		if(waypoint_reached == 2 && wp2_reach_counter == 1){
+		if(waypoint_reached == 2 && mission_repeat_counter == 1){
 			std_msgs::Int8 vision_flag;
 			vision_flag.data = 1;
 			vision_flag_publisher.publish(vision_flag);
@@ -153,7 +152,7 @@ int main(int argc, char **argv) {
 
 		// dropzone confirmed
 		if(hit_count >= 3){
-			ROS_INFO("DROPZONE TARGET AQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+			ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
 			// proceed calculate target coordinate
 			targetCoordinate tgt_coord = calc_drop_coord();
 			
@@ -196,7 +195,11 @@ int main(int argc, char **argv) {
 			}
 
 			servo_drop_wp(7,4);
-			servo_drop_wp(7,5);
+
+			if(mission_repeat_counter == 3){
+				erase_wp(4);
+				servo_drop_wp(8,4);
+			}
 		}
 
 		rate.sleep();
