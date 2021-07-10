@@ -7,11 +7,11 @@ For Tubitak 2021, Rasendriya has two missions: Flying in oval track and loiter i
 ## Mission Details
 ### Mission 1
 Mission 1 consist of flying in oval track and loiter in pole with small radius. No computer vision required. Launch:  
-  `roslaunch mavros apm.launch`
+  `roslaunch mavros apm.launch`  
   `roslaunch rasendriya rasendriya_mission1.launch`  
 ### Mission 2
-Mission 2 also similar to mission 1. But instead of flying in oval track, the plane must track the dropzone. Launch:  
-  `roslaunch mavros apm.launch`
+Mission 2 also similar to mission 1. But instead of flying in oval track, the plane must track the dropzone and drop the payload 2 times. Launch:  
+  `roslaunch mavros apm.launch`  
   `roslaunch rasendriya rasendriya_mission2.launch`  
 
 ## Mission Flow and Algorithm
