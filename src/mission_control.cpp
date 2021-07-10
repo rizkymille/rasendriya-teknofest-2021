@@ -92,9 +92,10 @@ struct targetCoordinate calc_drop_coord(){
 	float R_earth = 6378.1*1e3;
 	float pixel_to_meter = 0.0002645833;
 	float focal_length = 0.29; // tune value until correct
+	float offset_drop = 2;
 
 	float X_coord = x_dz*pixel_to_meter*alt/focal_length;
-	float Y_coord = y_dz*pixel_to_meter*alt/focal_length;
+	float Y_coord = (y_dz + offset_drop)*pixel_to_meter*alt/focal_length;
 	float r_dist = sqrt(pow(X_coord, 2) + pow(Y_coord, 2));
 	targetCoordinate.latitude = (180/pi)*asin(sin(gps_lat)*cos(r_dist/R_earth)+cos(gps_lat)*sin(r_dist/R_earth)*cos(gps_hdg+cam_angle));
 	targetCoordinate.longitude = gps_long + (180/pi)*atan((sin(gps_hdg+cam_angle)*sin(r_dist/R_earth)*cos(gps_lat)/(cos(r_dist/R_earth)-sin(gps_lat)*sin(targetCoordinate.latitude))));
