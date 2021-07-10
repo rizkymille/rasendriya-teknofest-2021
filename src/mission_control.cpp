@@ -91,7 +91,7 @@ struct targetCoordinate calc_drop_coord(){
 	float pi = 3.14159;
 	float R_earth = 6378.1*1e3;
 	float pixel_to_meter = 0.0002645833;
-	float focal_length = 2.9 * 1e-6; // in milimeters
+	float focal_length = 2.9 * 1e-3; // in milimeters
 
 	float X_coord = x_dz*pixel_to_meter*alt/focal_length;
 	float Y_coord = y_dz*pixel_to_meter*alt/focal_length;
