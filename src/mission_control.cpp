@@ -147,8 +147,11 @@ int main(int argc, char **argv) {
 
 		// dropzone found, confirm by wait for hit_point
 		bool found_condition = (x_dz && y_dz) > (0 || NAN);
-		while(found_condition){
+		if(found_condition){
 			++hit_count;
+		}
+		else {
+			hit_count = 0;
 		}
 
 		// dropzone confirmed
