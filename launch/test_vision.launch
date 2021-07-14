@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>
+    
+</launch>
