@@ -13,9 +13,6 @@ Mission 2 also similar to mission 1. But instead of flying in oval track, the pl
 More to write later
 
 ## Setup
-### Single Board Computer
-- Odroid XU4  
-
 ### Prerequisites
 - ROS Noetic Ninjemys
 
@@ -31,7 +28,7 @@ More to write later
 #### ROS Packages
 - MAVROS
 
-### Odroid Headless Setup
+### Headless Setup
 #### SSH
 Check SSH running  
   `sudo systemctl status sshd`  
@@ -40,10 +37,8 @@ Start SSH
   `sudo systemctl start ssh`  
 
 #### ngrok
-Start ngrok service  
-`./ngrok tcp 22`  
-ssh via ngrok tunneling  
-`ssh odroid@<ip_ngrok> -p <port_ngrok>`  
+Install ngrok  
+
 
 #### vnc Remote Desktop  
 Install vnc server  
@@ -52,7 +47,7 @@ Install vnc server
 Run vnc server  
 `sudo x11vnc -display :0 -auth guess`  
 
-## Launching Odroid Headless
+## Launching Headless
 ### SSH  
 Connect your ground control station to vehicle SBC via ssh  
 `ssh device_name@ip_address`  
@@ -66,5 +61,15 @@ Mission 1:
 `roslaunch rasendriya mission1.launch`  
 Mission 2:
 `roslaunch rasendriya mission2.launch`  
+
+### ngrok
+Start ngrok service  
+`./ngrok tcp 22`  
+ssh via ngrok tunneling  
+`ssh odroid@<ip_ngrok> -p <port_ngrok>`  
+
+#### vnc Remote Desktop  
+Run vnc server  
+`sudo x11vnc -display :0 -auth guess`  
 
 
