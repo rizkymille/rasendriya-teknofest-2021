@@ -12,7 +12,7 @@ from std_msgs.msg import Int8
 # camera resolution width and height parameters
 width = 640
 height = 480
-vision_flag = -1;
+vision_flag = 1
 
 def vision_flag_callback(vis_flag):
     vision_flag = vis_flag.data
@@ -32,24 +32,21 @@ def dropzone_detect():
     rospy.init_node('vision_dropzone')
 
     # initialize ros publisher
-    pub = rospy.Publisher('dropzone_detector', Dropzone, queue_size=3)
-    rate = rospy.Rate(30)
+    pub = rospy.Publisher('/rasendriya/dropzone', Dropzone, queue_size=20)
+    rate = rospy.Rate(20)
     msg = Dropzone()
     
     # initialize ros subscriber
-    rospy.Subscriber("vision_flag", Int8, vision_flag_callback)
-    
-    # spin
-    rospy.spin()
-
-    time.sleep(2.)
+    rospy.Subscriber("/rasendriya/vision_flag", Int8, vision_flag_callback)
 
     # set lower and upper hsv threshold in red
     lower = np.array([170, 127, 117], dtype='uint8')
-    upper = np.array([179, 255, 255],  dtype='uint8')
+    upper = np.array([179, 255, 255], dtype='uint8')
+
+    if not (rospy.is_shutdown() and vision_flag == -1):
+        rospy.loginfo("Vision program launched. Starting target detection")
 
     while not (rospy.is_shutdown() and vision_flag == -1):
-        
         # pre process
         img = cam.read()
         img_disp = img.copy()
@@ -91,16 +88,23 @@ def dropzone_detect():
                 cX = i[0] - width/2
                 cY = height/2 - i[1]
                 cAngle = math.degrees(math.atan2(cY, cX))
-                msg.x_dropzone = cX
-                msg.y_dropzone = cY
+                msg.x_dropzone = int(cX)
+                msg.y_dropzone = int(cY)
                 msg.center_angle = cAngle
 
-        cv2.imshow("Camera", img)
+        #cv2.imshow("Camera", img_disp)
         #cv2.imshow("Mask", frame)
         #cv2.imshow("Canny Edge", canny)
 
         pub.publish(msg)
         rate.sleep()
+
+        if rospy.is_shutdown():
+            rospy.loginfo("Vision program shutting down")
+            break
+
+    # spin
+    rospy.spin()
 
 if __name__ == "__main__":
 	try:

@@ -6,6 +6,7 @@
 #include "mavros_msgs/CommandCode.h"
 #include "mavros_msgs/Altitude.h"
 #include "std_msgs/Int8.h"
+#include "std_msgs/Empty.h"
 #include "std_msgs/Float64.h"
 #include "sensor_msgs/NavSatFix.h"
 #include <math.h>
@@ -32,7 +33,7 @@ ros::ServiceClient waypoint_push_client;
 void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
 	x_dz = dropzone_loc.x_dropzone;
 	y_dz = dropzone_loc.y_dropzone;
-	cam_angle = dropzone_loc.cAngle;
+	cam_angle = dropzone_loc.center_angle;
 }
 
 void gps_callback(const sensor_msgs::NavSatFix& gps_data){
@@ -78,7 +79,7 @@ void servo_drop_wp(int servo_ch, int wp_drop_num){
 		ROS_INFO("CHANNEL %d PAYLOAD DROPPING WAYPOINT SENT", servo_ch);
 	}
 	else {
-		ROS_INFO("FAILED TO SEND DROPPING WAYPOINT CHANNEL %d PAYLOAD", servo_ch);
+		ROS_WARN("FAILED TO SEND DROPPING WAYPOINT CHANNEL %d PAYLOAD", servo_ch);
 	}
 }
 
@@ -112,21 +113,26 @@ int main(int argc, char **argv) {
 
 	ros::ServiceClient waypoint_push_client = nh.serviceClient<mavros_msgs::WaypointPush>("/mavros/mission/push");
 
-	ros::Subscriber mission_flag_subscriber = nh.subscribe("mission_flag", 1, mission_flag_callback);
+	ros::Subscriber mission_flag_subscriber = nh.subscribe("/rasendriya/mission_flag", 1, mission_flag_callback);
 
 	ros::Subscriber waypoint_reached_subscriber = nh.subscribe("/mavros/mission/reached", 1, waypoint_reached_callback);
-	ros::Subscriber dropzone_target_subscriber = nh.subscribe("dropzone_detector", 3, dropzone_target_callback);
+	ros::Subscriber dropzone_target_subscriber = nh.subscribe("/rasendriya/dropzone", 3, dropzone_target_callback);
 	ros::Subscriber gps_coordinate_subscriber = nh.subscribe("/mavros/global_position/global", 1, gps_callback);
 	ros::Subscriber alt_subscriber = nh.subscribe("/mavros/altitude", 1, alt_callback);
 	ros::Subscriber gps_hdg_subscriber = nh.subscribe("/mavros/global_position/compass_hdg", 1, gps_hdg_callback);
 
-	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Int8>("vision_flag", 1);
+	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Int8>("/rasendriya/vision_flag", 1);
+	std_msgs::Int8 vision_flag;
+
+	std_msgs::Empty emptydata;
 
 	ros::Rate rate(30);
 
-	while(ros::ok() && mission_flag != 0){
-		ros::spin();
+	if(hit_count >= 3){
+		ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+	}
 
+	while(ros::ok() && mission_flag != 0){
 		ROS_INFO("dropzone x coordinate: %d \ndropzone y coordinate: %d \ncoordinate angle: %f", x_dz, y_dz, cam_angle);
 		ROS_INFO("plane longitude: %f \nplane latitude: %f \nplane altitude: %f \nplane heading: %f", gps_long, gps_lat, alt, gps_hdg);
 		// increase counter if wp3 reached
@@ -135,19 +141,16 @@ int main(int argc, char **argv) {
 		}
 		// turn on vision node when wp3 has reached
 		if(waypoint_reached == 2 && mission_repeat_counter == 1){
-			std_msgs::Int8 vision_flag;
 			vision_flag.data = 1;
 			vision_flag_publisher.publish(vision_flag);
 		}
 		else {
-			std_msgs::Int8 vision_flag;
 			vision_flag.data = -1;
 			vision_flag_publisher.publish(vision_flag);
 		}
 
 		// dropzone found, confirm by wait for hit_point
-		bool found_condition = (x_dz && y_dz) > (0 || NAN);
-		if(found_condition){
+		if(x_dz && y_dz){
 			++hit_count;
 		}
 		else {
@@ -156,7 +159,6 @@ int main(int argc, char **argv) {
 
 		// dropzone confirmed
 		if(hit_count >= 3){
-			ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
 			// proceed calculate target coordinate
 			targetCoordinate tgt_coord = calc_drop_coord();
 			
@@ -174,7 +176,7 @@ int main(int argc, char **argv) {
 				ROS_INFO("DO JUMP TO WAYPOINT 1 SUCCESS");
 			}
 			else {
-				ROS_INFO("FAILED TO REPEAT MISSION");
+				ROS_WARN("FAILED TO REPEAT MISSION");
 			}
 
 
@@ -195,20 +197,26 @@ int main(int argc, char **argv) {
 				ROS_INFO("WAYPOINT NAVIGATION DROP SENT");
 			}
 			else {
-				ROS_INFO("FAILED TO SEND WAYPOINT NAVIGATION DROP");
+				ROS_WARN("FAILED TO SEND WAYPOINT NAVIGATION DROP");
 			}
+			hit_count = 0;
 
+			// drop front ball
 			servo_drop_wp(7,4);
-
-			if(mission_repeat_counter == 3){
-				erase_wp(4);
-				servo_drop_wp(8,4);
-			}
+			hit_count = 0; // "falsifying variable" so loop dont repeat this if condition
 		}
 
+		// drop back ball
+		if(mission_repeat_counter == 3){
+			erase_wp(4);
+			servo_drop_wp(8,4);
+			mission_repeat_counter = 0; // "falsifying variable" so loop dont repeat this if condition
+		}
+
+		ros::spinOnce();
 		rate.sleep();
 	}
-	
+
 	return 0;
 }
 

@@ -39,16 +39,21 @@ Install SSH at your local SBC
   `sudo apt install openssh-server`  
 Check SSH running  
   `sudo systemctl status sshd`  
+Start SSH
   `sudo systemctl enable ssh`  
   `sudo systemctl start ssh`  
 
 #### Ngrok
+Start ngrok service  
+`./ngrok tcp 22`  
+ssh via ngrok tunneling  
+`ssh odroid@<ip_ngrok> -p <port_ngrok>`  
 
 #### vnc Remote Desktop  
-Install vnc server:  
+Install vnc server  
 `sudo apt update`  
 `sudo apt install x11vnc`  
-Run vnc server:  
+Run vnc server  
 `x11vnc -display :0 -auth guess`  
 
 ## Accessing Odroid Headless  

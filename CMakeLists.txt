@@ -109,7 +109,7 @@ generate_messages(DEPENDENCIES
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #    INCLUDE_DIRS include
-    LIBRARIES rasendriya
+#    LIBRARIES rasendriya
     CATKIN_DEPENDS message_runtime
 #    DEPENDS system_lib
 )
@@ -122,7 +122,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
     ${catkin_INCLUDE_DIRS}
-#    include
+    include
 )
 
 ## Declare a C++ library
@@ -160,13 +160,6 @@ add_executable(failsafe_mode
 add_dependencies(failsafe_mode
     rasendriya_generate_messages_cpp)
 target_link_libraries(failsafe_mode
-    ${catkin_LIBRARIES})
-
-add_executable(test_servo
-    src/test_servo.cpp)
-add_dependencies(test_servo
-    rasendriya_generate_messages_cpp)
-target_link_libraries(test_servo
     ${catkin_LIBRARIES})
 
 add_executable(mission_control

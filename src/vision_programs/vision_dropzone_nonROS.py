@@ -3,8 +3,8 @@ import numpy as np
 import time
 import imutils
 import argparse
-cfrom imutils.video import VideoStream
-from imutils.video import FPS 
+import math
+from imutils.video import VideoStream
 
 # camera resolution width and height parameters
 width = 640
@@ -50,9 +50,9 @@ def dropzone_detect():
     args = parser.parse_args()
 
     if args.integers >= 0:
-    	cam = VideoStream(src=args.integers).start()
+        cam = VideoStream(src=args.integers).start()
     elif args.integers == -1:
-    	cam = VideoStream(usePiCamera=False).start()
+        cam = VideoStream(usePiCamera=False).start()
     
     time.sleep(2.)
 
@@ -63,7 +63,7 @@ def dropzone_detect():
     upper = np.array([179, 255, 255],  dtype='uint8')
 
     while True:
-    	# pre process
+        # pre process
         img = cam.read()
         img_disp = img.copy()
         #img = imutils.resize(img, width=400)
@@ -89,22 +89,22 @@ def dropzone_detect():
         if circles is not None:
             circles = np.uint16(np.around(circles))
             for i in circles[0, :]:
-        	    center = (i[0], i[1])
-        	    # circle center
-        	    cv2.circle(img_disp, center, 1, (255,255,255), 3)
-        	    cv2.putText(img_disp, "center", (i[0] - 20, i[1] - 20),
-        	    	cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        	    # circle outline
-        	    radius = (i[2])
-        	    cv2.circle(img_disp, center, radius, (0,255,0), 3)
-        	    
-        	    # transform pixel coordinate system to screen coordinate system
-        	    cX = i[0] - width/2
-        	    cY = height/2 - i[1]
-        	    cAngle = math.degrees(math.atan2(cY, cX))
-        	    print("x coordinate:", cX)
-        	    print("y coordinate", cY)
-        	    print("angle", cAngle)
+                center = (i[0], i[1])
+                # circle center
+                cv2.circle(img_disp, center, 1, (255,255,255), 3)
+                cv2.putText(img_disp, "center", (i[0] - 20, i[1] - 20),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                # circle outline
+                radius = (i[2])
+                cv2.circle(img_disp, center, radius, (0,255,0), 3)
+                
+                # transform pixel coordinate system to screen coordinate system
+                cX = i[0] - width/2
+                cY = height/2 - i[1]
+                cAngle = math.degrees(math.atan2(cY, cX))
+                print("x coordinate:", cX)
+                print("y coordinate", cY)
+                print("angle", cAngle)
 
         cv2.imshow("Camera", img_disp)
         cv2.imshow("Mask", frame)

@@ -1,5 +1,0 @@
-<launch>
-
-    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
-
-</launch>
