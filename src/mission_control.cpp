@@ -213,9 +213,10 @@ int main(int argc, char **argv) {
 			mission_repeat_counter = 0; // "falsifying variable" so loop dont repeat this if condition
 		}
 
-		ros::spinOnce();
 		rate.sleep();
 	}
+
+	ros::spin();
 
 	return 0;
 }

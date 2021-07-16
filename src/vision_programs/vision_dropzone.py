@@ -99,6 +99,7 @@ def dropzone_detect():
         pub.publish(msg)
         rate.sleep()
 
+        # ROS shutdown with killing cv2 loop process. To ensure node killed without SIGINT or SIGKILL
         if rospy.is_shutdown():
             rospy.loginfo("Vision program shutting down")
             break

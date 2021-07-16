@@ -66,9 +66,11 @@ int main(int argc, char **argv) {
 
 			if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
 				ROS_INFO("OVERRIDING CONTROL. PLANE AT GUIDED FAILSAFE MODE");
+				sleep(2);
 			}
 			else {
 				ROS_WARN("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
+				sleep(2);
 			}
 
 			// shut down vision_dropzone.py and mission_control.cpp
@@ -82,7 +84,6 @@ int main(int argc, char **argv) {
 
 			ros::spinOnce();
 			rate.sleep();
-			break;
 		}
 	}
 	
