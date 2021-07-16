@@ -65,7 +65,7 @@ def dropzone_detect():
         canny = cv2.dilate(canny, np.ones((5,5)), iterations=1)
 
         # circle detection using hough transform
-        circles = cv2.HoughCircles(canny, cv2.HOUGH_GRADIENT, 1, 200,
+        circles = cv2.HoughCircles(canny, method=cv2.HOUGH_GRADIENT, dp=1.5, minDist=200,
             param1=100, param2=30,
             minRadius=5, maxRadius=120)
 
