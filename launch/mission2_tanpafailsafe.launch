@@ -1,7 +1,7 @@
 <launch>
 
     <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>    
-    <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
+    <node name="mission_control" pkg ="rasendriya" type="mission_control.cpp" output="screen"/>
     
     <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
 
