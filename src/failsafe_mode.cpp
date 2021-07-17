@@ -81,10 +81,9 @@ int main(int argc, char **argv) {
 			std_msgs::Int8 mission_flag;
 			mission_flag.data = -1;
 			mission_flag_publisher.publish(mission_flag);
-
-			ros::spinOnce();
-			rate.sleep();
 		}
+		ros::spinOnce();
+		rate.sleep();
 	}
 	
 	return 0;
