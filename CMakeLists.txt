@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   roslaunch
   sensor_msgs
+  message_runtime
 )
 
 ## Check all *.launch files in launch directory
@@ -110,7 +111,7 @@ generate_messages(DEPENDENCIES
 catkin_package(
 #    INCLUDE_DIRS include
 #    LIBRARIES rasendriya
-    CATKIN_DEPENDS message_runtime
+    CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #    DEPENDS system_lib
 )
 
