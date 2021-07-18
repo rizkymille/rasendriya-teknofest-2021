@@ -72,4 +72,5 @@ ssh via ngrok tunneling
 Run vnc server  
 `sudo x11vnc -display :0 -auth guess`  
 
-
+## ROS configure
+https://answers.ros.org/question/206876/how-often-do-i-need-to-source-setupbash/
