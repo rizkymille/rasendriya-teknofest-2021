@@ -127,12 +127,16 @@ int main(int argc, char **argv) {
 	std_msgs::Empty emptydata;
 
 	ros::Rate rate(30);
+	
+	while(ros::ok()) {
+		ros::spinOnce();
+	}
 
 	if(hit_count >= 3){
 		ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
 	}
 
-	while(ros::ok() && mission_flag != 0){
+	while(mission_flag != 0){
 		ROS_INFO("dropzone x coordinate: %d \ndropzone y coordinate: %d \ncoordinate angle: %f", x_dz, y_dz, cam_angle);
 		ROS_INFO("plane longitude: %f \nplane latitude: %f \nplane altitude: %f \nplane heading: %f", gps_long, gps_lat, alt, gps_hdg);
 		// increase counter if wp3 reached
@@ -151,10 +155,10 @@ int main(int argc, char **argv) {
 
 		// dropzone found, confirm by wait for hit_point
 		if(x_dz && y_dz){
-			++hit_count;
+			hit_count++;
 		}
 		else {
-			hit_count = 0;
+			hit_count--;
 		}
 
 		// dropzone confirmed
@@ -199,25 +203,22 @@ int main(int argc, char **argv) {
 			else {
 				ROS_WARN("FAILED TO SEND WAYPOINT NAVIGATION DROP");
 			}
-			hit_count = 0;
-
-			// drop front ball
+			
+			// send waypoint to drop front ball
 			servo_drop_wp(7,4);
-			hit_count = 0; // "falsifying variable" so loop dont repeat this if condition
+			hit_count = 0;
 		}
 
-		// drop back ball
+		// send drop back ball
 		if(mission_repeat_counter == 3){
 			erase_wp(4);
 			servo_drop_wp(8,4);
-			mission_repeat_counter = 0; // "falsifying variable" so loop dont repeat this if condition
+			mission_repeat_counter = 0;
 		}
-
+		ros::spinOnce();
 		rate.sleep();
 	}
-
-	ros::spin();
-
+	
 	return 0;
 }
 
