@@ -19,15 +19,12 @@ void waypoint_reached_callback(const mavros_msgs::WaypointReached& wp_reached){
 	waypoint_reached = wp_reached.wp_seq;
 }
 
+// CALLBACKS //
+
 int x_dz, y_dz;
 float cam_angle;
 float alt, gps_long, gps_lat, gps_hdg;
 int mission_flag = 1;
-
-mavros_msgs::WaypointPush waypoint_push;
-ros::ServiceClient waypoint_push_client;
-
-// CALLBACKS //
 
 void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
 	x_dz = dropzone_loc.x_dropzone;
@@ -54,7 +51,10 @@ void mission_flag_callback(const std_msgs::Int8& mis_flag){
 
 // MECHANISMS, CALCULATORS, AND METHODS //
 
-void insert_wp(int _wp_num, mavros_msgs::Waypoint _wp){	
+mavros_msgs::WaypointPush waypoint_push;
+ros::ServiceClient waypoint_push_client;
+
+void insert_wp(int _wp_num, const mavros_msgs::Waypoint& _wp){	
 	waypoint_push.request.waypoints.insert(waypoint_push.request.waypoints.begin() + _wp_num, _wp);
 }
 
