@@ -6,7 +6,6 @@
 #include "mavros_msgs/CommandCode.h"
 #include "mavros_msgs/Altitude.h"
 #include "std_msgs/Int8.h"
-#include "std_msgs/Empty.h"
 #include "std_msgs/Float64.h"
 #include "sensor_msgs/NavSatFix.h"
 #include <math.h>
@@ -124,8 +123,6 @@ int main(int argc, char **argv) {
 	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Int8>("/rasendriya/vision_flag", 1);
 	std_msgs::Int8 vision_flag;
 
-	std_msgs::Empty emptydata;
-
 	ros::Rate rate(30);
 	
 	while(ros::ok()) {
@@ -154,7 +151,7 @@ int main(int argc, char **argv) {
 		}
 
 		// dropzone found, confirm by wait for hit_point
-		if(x_dz && y_dz){
+		if((x_dz && y_dz) > 0){
 			hit_count++;
 		}
 		else {
