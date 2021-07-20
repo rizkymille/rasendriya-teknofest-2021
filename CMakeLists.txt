@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   roslaunch
   sensor_msgs
-  message_runtime
 )
 
 ## Check all *.launch files in launch directory
@@ -158,15 +157,15 @@ include_directories(
 
 add_executable(failsafe_mode
     src/failsafe_mode.cpp)
-add_dependencies(failsafe_mode
-    rasendriya_generate_messages_cpp)
+#add_dependencies(failsafe_mode
+#    rasendriya_generate_messages_cpp)
 target_link_libraries(failsafe_mode
     ${catkin_LIBRARIES})
 
 add_executable(mission_control
     src/mission_control.cpp)
-add_dependencies(mission_control
-    rasendriya_generate_messages_cpp)
+#add_dependencies(mission_control
+#    rasendriya_generate_messages_cpp)
 target_link_libraries(mission_control
     ${catkin_LIBRARIES})
 

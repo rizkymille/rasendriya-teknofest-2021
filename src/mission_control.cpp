@@ -82,12 +82,7 @@ void servo_drop_wp(int servo_ch, int wp_drop_num){
 	}
 }
 
-struct targetCoordinate {
-	float longitude, latitude;
-};
-
-struct targetCoordinate calc_drop_coord(){
-	struct targetCoordinate targetCoordinate;
+void calc_drop_coord(float& _tgtlat, float& _tgtlon){
 	float pi = 3.14159;
 	float R_earth = 6378.1*1e3;
 	float pixel_to_meter = 0.0002645833;
@@ -97,15 +92,16 @@ struct targetCoordinate calc_drop_coord(){
 	float X_coord = x_dz*pixel_to_meter*alt/focal_length;
 	float Y_coord = (y_dz + offset_drop)*pixel_to_meter*alt/focal_length;
 	float r_dist = sqrt(pow(X_coord, 2) + pow(Y_coord, 2));
-	targetCoordinate.latitude = (180/pi)*asin(sin(gps_lat)*cos(r_dist/R_earth)+cos(gps_lat)*sin(r_dist/R_earth)*cos(gps_hdg+cam_angle));
-	targetCoordinate.longitude = gps_long + (180/pi)*atan((sin(gps_hdg+cam_angle)*sin(r_dist/R_earth)*cos(gps_lat)/(cos(r_dist/R_earth)-sin(gps_lat)*sin(targetCoordinate.latitude))));
-	return targetCoordinate;
+	_tgtlat = (180/pi)*asin(sin(gps_lat)*cos(r_dist/R_earth)+cos(gps_lat)*sin(r_dist/R_earth)*cos(gps_hdg+cam_angle));
+	_tgtlon = gps_long + (180/pi)*atan((sin(gps_hdg+cam_angle)*sin(r_dist/R_earth)*cos(gps_lat)/(cos(r_dist/R_earth)-sin(gps_lat)*sin(_tgtlat))));
 }
 
 
 int main(int argc, char **argv) {
 	int mission_repeat_counter = 0;
 	int hit_count = 0;
+
+	float tgt_lat, tgt_lon;
 
 	ros::init(argc, argv, "mission_control");
 	ros::NodeHandle nh;
@@ -127,6 +123,7 @@ int main(int argc, char **argv) {
 	
 	while(ros::ok()) {
 		ros::spinOnce();
+		rate.sleep();
 	}
 
 	if(hit_count >= 3){
@@ -152,16 +149,16 @@ int main(int argc, char **argv) {
 
 		// dropzone found, confirm by wait for hit_point
 		if((x_dz && y_dz) > 0){
-			hit_count++;
+			++hit_count;
 		}
 		else {
-			hit_count--;
+			--hit_count;
 		}
 
 		// dropzone confirmed
 		if(hit_count >= 3){
 			// proceed calculate target coordinate
-			targetCoordinate tgt_coord = calc_drop_coord();
+			calc_drop_coord(tgt_lat, tgt_lon);
 			
 			// send do jump command to WP 1 from WP 4 after dropzone has found as WP 5
 			mavros_msgs::Waypoint wp_repeat;
@@ -189,8 +186,8 @@ int main(int argc, char **argv) {
 			wp_nav_drop.autocontinue = true;
 			wp_nav_drop.param2 = 1;
 			wp_nav_drop.param3 = 0;
-			wp_nav_drop.x_lat = tgt_coord.latitude;
-			wp_nav_drop.y_long = tgt_coord.longitude;
+			wp_nav_drop.x_lat = tgt_lat;
+			wp_nav_drop.y_long = tgt_lon;
 			wp_nav_drop.z_alt = 1.5; // dropping altitude. please tune
 			insert_wp(3, wp_nav_drop);
 
@@ -212,8 +209,6 @@ int main(int argc, char **argv) {
 			servo_drop_wp(8,4);
 			mission_repeat_counter = 0;
 		}
-		ros::spinOnce();
-		rate.sleep();
 	}
 	
 	return 0;
