@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 			fs_engage = false;
 		}
 
-		if(fs_engage) { // please tune this threshold value
+		if(fs_engage) {
 			// set GUIDED mode
 			mavros_msgs::SetMode flight_mode;
 			flight_mode.request.custom_mode = "GUIDED";
