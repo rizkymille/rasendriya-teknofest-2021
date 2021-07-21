@@ -120,17 +120,8 @@ int main(int argc, char **argv) {
 	std_msgs::Int8 vision_flag;
 
 	ros::Rate rate(30);
-	
-	while(ros::ok()) {
-		ros::spinOnce();
-		rate.sleep();
-	}
 
-	if(hit_count >= 3){
-		ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
-	}
-
-	while(mission_flag != 0){
+	while(ros::ok() && mission_flag != 0){
 		ROS_INFO("dropzone x coordinate: %d \ndropzone y coordinate: %d \ncoordinate angle: %f", x_dz, y_dz, cam_angle);
 		ROS_INFO("plane longitude: %f \nplane latitude: %f \nplane altitude: %f \nplane heading: %f", gps_long, gps_lat, alt, gps_hdg);
 		// increase counter if wp3 reached
@@ -157,6 +148,7 @@ int main(int argc, char **argv) {
 
 		// dropzone confirmed
 		if(hit_count >= 3){
+			ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
 			// proceed calculate target coordinate
 			calc_drop_coord(tgt_lat, tgt_lon);
 			
@@ -209,6 +201,8 @@ int main(int argc, char **argv) {
 			servo_drop_wp(8,4);
 			mission_repeat_counter = 0;
 		}
+		ros::spinOnce();
+		rate.sleep();
 	}
 	
 	return 0;
