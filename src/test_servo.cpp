@@ -9,7 +9,7 @@ void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
 	y_dz = dropzone_loc.y_dropzone;
 }
 
-bool trigger_servo(int servo_num, const ros::ServiceClient& _svo_client){
+bool trigger_servo(int servo_num, ros::ServiceClient& _svo_client){
 	mavros_msgs::CommandLong do_set_servo;
 	do_set_servo.request.broadcast = true;
 	do_set_servo.request.command = 183;
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle nh;
 
 	int hit_count;
-
+	
 	ros::ServiceClient set_servo_client = nh.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command", 1);
 
 	ros::Subscriber dropzone_target_subscriber = nh.subscribe("/rasendriya/dropzone", 3, dropzone_target_callback);
@@ -45,9 +45,10 @@ int main(int argc, char **argv) {
 		}
 
 		if(hit_count >= 3) {
-			bool payload1_drop = trigger_servo(6, set_servo_client);
-			if(payload1_drop) {
+			trigger_servo(6, set_servo_client);
+			if(trigger_servo(6, set_servo_client)) {
 				trigger_servo(7, set_servo_client);
+				break;
 			}
 		}
 		ros::spinOnce();
