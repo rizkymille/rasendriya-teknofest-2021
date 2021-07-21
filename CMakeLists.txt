@@ -157,16 +157,17 @@ include_directories(
 
 add_executable(failsafe_mode
     src/failsafe_mode.cpp)
-#add_dependencies(failsafe_mode
-#    rasendriya_generate_messages_cpp)
 target_link_libraries(failsafe_mode
     ${catkin_LIBRARIES})
 
 add_executable(mission_control
     src/mission_control.cpp)
-#add_dependencies(mission_control
-#    rasendriya_generate_messages_cpp)
 target_link_libraries(mission_control
+    ${catkin_LIBRARIES})
+
+add_executable(test_servo
+    src/test_servo.cpp)
+target_link_libraries(test_servo
     ${catkin_LIBRARIES})
 
 #############
