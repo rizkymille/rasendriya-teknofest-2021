@@ -148,7 +148,9 @@ int main(int argc, char **argv) {
 
 		// dropzone confirmed
 		if(hit_count >= 3){
-			ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+			if(hit_count == 3){
+				ROS_INFO("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+			}
 			// proceed calculate target coordinate
 			calc_drop_coord(tgt_lat, tgt_lon);
 			
