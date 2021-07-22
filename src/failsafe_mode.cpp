@@ -48,10 +48,10 @@ int main(int argc, char **argv) {
 			fs_engage = false;
 		}
 
-		if(fs_engage) {
+		while(fs_engage) {
 			// set GUIDED mode
 			mavros_msgs::SetMode flight_mode;
-			flight_mode.request.custom_mode = "GUIDED";
+			flight_mode.request.custom_mode = "MANUAL";
 
 			// DISARM
 			mavros_msgs::CommandBool arm_mode;
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 			control_srf_publisher.publish(control_srf_fs);
 
 			if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
-				ROS_INFO("OVERRIDING CONTROL. PLANE AT GUIDED FAILSAFE MODE");
+				ROS_INFO("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
 				sleep(2);
 			}
 			else {

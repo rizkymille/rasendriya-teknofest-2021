@@ -1,5 +1,9 @@
 <launch>
 
-    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
+    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen" launch-prefix="gnome-terminal -e"/>
+    <rosparam param="mavros/system_id">1</rosparam>
+    <rosparam param="mavros/component_id">240</rosparam>
+    
+    <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
 
 </launch>

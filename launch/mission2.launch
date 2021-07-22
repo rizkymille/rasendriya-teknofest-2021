@@ -3,6 +3,8 @@
     <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
     <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
+    <rosparam param="mavros/system_id">1</rosparam>
+    <rosparam param="mavros/component_id">240</rosparam>
 
     <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
     
