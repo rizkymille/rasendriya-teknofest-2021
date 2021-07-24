@@ -121,11 +121,7 @@ int main(int argc, char **argv) {
 
 	ros::Rate rate(30);
 
-	while(ros::ok()){
-		
-		if(mission_flag < 0){
-			break;
-		}
+	while(ros::ok() && (mission_flag > 0)) {
 
 		ROS_INFO("dropzone x coordinate: %d \ndropzone y coordinate: %d \ncoordinate angle: %f", x_dz, y_dz, cam_angle);
 		ROS_INFO("plane longitude: %f \nplane latitude: %f \nplane altitude: %f \nplane heading: %f", gps_long, gps_lat, alt, gps_hdg);

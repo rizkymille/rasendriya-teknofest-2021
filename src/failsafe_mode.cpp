@@ -50,15 +50,30 @@ int main(int argc, char **argv) {
 		ros::spinOnce();
 		rate.sleep();
 	}
+
+	// init flag
+	bool init_flag = false;
 	
 	while(ros::ok() && fs_engage) {
-		// set GUIDED mode
-		mavros_msgs::SetMode flight_mode;
-		flight_mode.request.custom_mode = "MANUAL";
+		if(!init_flag) {
+			// set MANUAL mode
+			mavros_msgs::SetMode flight_mode;
+			flight_mode.request.custom_mode = "MANUAL";
 
-		// DISARM
-		mavros_msgs::CommandBool arm_mode;
-		arm_mode.request.value = 0;
+			// DISARM
+			mavros_msgs::CommandBool arm_mode;
+			arm_mode.request.value = 0;
+
+			if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
+				ROS_INFO("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
+				sleep(2);
+			}
+			else {
+				ROS_WARN("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
+				sleep(2);
+			}
+			init_flag = true;
+		}
 
 		// FAILSAFE CONTROL SURFACE
 		mavros_msgs::OverrideRCIn control_srf_fs;
@@ -66,15 +81,6 @@ int main(int argc, char **argv) {
 		control_srf_fs.channels[1] = 1900; // SERVO 2 ELE
 		control_srf_fs.channels[3] = 1900; // SERVO 4 RUD
 		control_srf_publisher.publish(control_srf_fs);
-
-		if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
-			ROS_INFO("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
-			sleep(2);
-		}
-		else {
-			ROS_WARN("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
-			sleep(2);
-		}
 
 		// shut down vision_dropzone.py and mission_control.cpp
 		std_msgs::Int8 vision_flag;
