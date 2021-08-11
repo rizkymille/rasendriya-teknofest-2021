@@ -1,8 +1,11 @@
 <launch>
-
+    <rosparam param="mavros/system_id">1</rosparam>
+    <rosparam param="mavros/component_id">240</rosparam>
+    
+    <arg name="camera_num" default="0" />
     <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>    
+    
     <node name="test_servo" pkg ="rasendriya" type="test_servo" output="screen"/>
     
-    <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
-
+    <!-- <include file="$(find mavros)/launch/apm.launch" launch-prefix="byobu" output="screen"/> -->
 </launch>

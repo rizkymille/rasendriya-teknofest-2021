@@ -4,7 +4,7 @@
 #include "mavros_msgs/RCIn.h"
 #include "mavros_msgs/RadioStatus.h"
 #include "mavros_msgs/CommandBool.h"
-#include "std_msgs/Int8.h"
+#include "std_msgs/Bool.h"
 
 int RSSI;
 int RC_IN_THR;
@@ -24,18 +24,23 @@ int main(int argc, char **argv) {
 	ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
 	ros::ServiceClient set_arm_client = nh.serviceClient<mavros_msgs::CommandBool>("/mavros/cmd/arming");
 
-	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Int8>("/rasendriya/vision_flag", 1);
-	ros::Publisher mission_flag_publisher = nh.advertise<std_msgs::Int8>("/rasendriya/mission_flag", 1);
+	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Bool>("/rasendriya/vision_flag", 1, true);
+	ros::Publisher mission_flag_publisher = nh.advertise<std_msgs::Bool>("/rasendriya/mission_flag", 1, true);
 	ros::Publisher control_srf_publisher = nh.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1);
 
 	ros::Subscriber radio_status_subscriber = nh.subscribe("/mavros/radio_status", 1, radio_status_callback);
 	ros::Subscriber rcin_throttle_subscriber = nh.subscribe("/mavros/rc/in", 1, rc_in_callback);
 
-	ros::Rate rate(5);
+	ros::Rate rate(10);
 
 	bool fs_engage = false;
 
+	ROS_INFO("Rasendriya package launched");
+
 	while(ros::ok() && !fs_engage){
+		
+		ROS_INFO_ONCE("Failsafe mode ready");
+		
 		if(RC_IN_THR < 950) {
 			sleep(1.5); // FS_SHORT_TIMEOUT
 			fs_engage = true;
@@ -50,29 +55,23 @@ int main(int argc, char **argv) {
 		ros::spinOnce();
 		rate.sleep();
 	}
-
-	// init flag
-	bool init_flag = false;
 	
 	while(ros::ok() && fs_engage) {
-		if(!init_flag) {
-			// set MANUAL mode
-			mavros_msgs::SetMode flight_mode;
-			flight_mode.request.custom_mode = "MANUAL";
+		// set MANUAL mode
+		mavros_msgs::SetMode flight_mode;
+		flight_mode.request.custom_mode = "MANUAL";
 
-			// DISARM
-			mavros_msgs::CommandBool arm_mode;
-			arm_mode.request.value = 0;
+		// DISARM
+		mavros_msgs::CommandBool arm_mode;
+		arm_mode.request.value = 0;
 
-			if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
-				ROS_INFO("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
-				sleep(2);
-			}
-			else {
-				ROS_WARN("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
-				sleep(2);
-			}
-			init_flag = true;
+		if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
+			ROS_WARN("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
+			sleep(2);
+		}
+		else {
+			ROS_ERROR("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
+			sleep(2);
 		}
 
 		// FAILSAFE CONTROL SURFACE
@@ -83,12 +82,12 @@ int main(int argc, char **argv) {
 		control_srf_publisher.publish(control_srf_fs);
 
 		// shut down vision_dropzone.py and mission_control.cpp
-		std_msgs::Int8 vision_flag;
-		vision_flag.data = -1;
+		std_msgs::Bool vision_flag;
+		vision_flag.data = false;
 		vision_flag_publisher.publish(vision_flag);
 
-		std_msgs::Int8 mission_flag;
-		mission_flag.data = -1;
+		std_msgs::Bool mission_flag;
+		mission_flag.data = false;
 		mission_flag_publisher.publish(mission_flag);
 		rate.sleep();
 	}

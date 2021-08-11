@@ -22,7 +22,7 @@ roslaunch_add_file_check(launch)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system) 
-# Boost ini buat threading. Bagus buat dipelajarin!
+# Boost ini bisa buat threading. Bagus buat dipelajarin!
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -122,7 +122,6 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
     ${catkin_INCLUDE_DIRS}
-    include
 )
 
 ## Declare a C++ library
@@ -166,7 +165,7 @@ target_link_libraries(mission_control
     ${catkin_LIBRARIES})
 
 add_executable(test_servo
-    src/test_servo.cpp)
+    src/testing/test_servo.cpp)
 target_link_libraries(test_servo
     ${catkin_LIBRARIES})
 

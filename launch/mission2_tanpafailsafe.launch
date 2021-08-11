@@ -1,8 +1,17 @@
 <launch>
 
-    <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>    
+    <rosparam param="mavros/system_id">1</rosparam>
+    <rosparam param="mavros/component_id">240</rosparam>
+    
+    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
+    
+    <arg name="camera_num" default="0" />
+    <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>
+    
+    <param name="/rasendriya/dropping_offset" type="float" value="2.1" />
+    <param name="/rasendriya/dropping_altitude" type="float" value="1.2" />
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
     
-    <!-- <include file="$(find mavros)/launch/apm.launch" /> -->
+    <!-- <include file="$(find mavros)/launch/apm.launch"/> -->
 
 </launch>
