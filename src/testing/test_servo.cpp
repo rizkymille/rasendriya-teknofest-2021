@@ -5,8 +5,8 @@
 int x_dz, y_dz;
 
 void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
-	x_dz = dropzone_loc.x_dropzone;
-	y_dz = dropzone_loc.y_dropzone;
+	x_dz = dropzone_loc.x;
+	y_dz = dropzone_loc.y;
 }
 
 bool trigger_servo(int servo_num, ros::ServiceClient& _svo_client){
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 	ros::Subscriber dropzone_target_subscriber = nh.subscribe("/rasendriya/dropzone", 3, dropzone_target_callback);
 
 	while(ros::ok()) {
-		if((x_dz && y_dz) > 0) {
+		if((x_dz && y_dz) != 3000) {
 			++hit_count;
 		}
 		else {
