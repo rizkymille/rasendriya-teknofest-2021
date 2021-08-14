@@ -116,8 +116,8 @@ float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
 
 void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset){
 	
-	float focal_length_x = 3*1e-3; // need to calibrate
-	float focal_length_y = 3*1e-3; // need to calibrate
+	float focal_length_x = 3; // units in mm. need to calibrate
+	float focal_length_y = 3; // units in mm. need to calibrate
 	float pixel_to_mm = 0.2645; // in mm
 
 	float X_meter = x_pixel*pixel_to_mm*alt/focal_length_x;
