@@ -17,7 +17,7 @@ More to write later
 - ROS Noetic Ninjemys
 
 #### Companion Computer
-- Ubuntu MATE 20.04 LTS for Odroid XU4
+- Ubuntu MATE 20.04 LTS for Raspberry Pi 4B 4GB
 
 #### Desktop
 - Ubuntu 20.04 LTS Focal Fossa
@@ -38,7 +38,8 @@ Start SSH
 
 #### ngrok
 Install ngrok  
-
+`sudo snap install ngrok`  
+`ngrok authtoken <your_auth_token>`
 
 #### vnc Remote Desktop  
 Install vnc server  
@@ -64,7 +65,7 @@ Mission 2:
 
 ### ngrok
 Start ngrok service  
-`./ngrok tcp 22`  
+`ngrok tcp 22`  
 ssh via ngrok tunneling  
 `ssh odroid@<ip_ngrok> -p <port_ngrok>`  
 
@@ -73,4 +74,7 @@ Run vnc server
 `sudo x11vnc -display :0 -auth guess`  
 
 ## ROS configure
-https://answers.ros.org/question/206876/how-often-do-i-need-to-source-setupbash/
+Set devel path in bashrc first  
+`sudo pluma ~/.bashrc` or `sudo gedit ~/.bashrc`  
+then add this in the last line  
+`source /home/pi/catkin_ws/devel/setup.bash`
