@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
 	// ROS LAUNCH PARAMETERS
 	
 	int calc_mode;
-	ros::param::get("/rasendriya/calc_mode, calc_mode);
+	ros::param::get("/rasendriya/calc_mode", calc_mode);
 	
 	float dropping_offset, dropping_altitude, drag_coeff;
 	if(calc_mode == 1) {
