@@ -35,7 +35,7 @@ def dropzone_detect():
 
     # initialize ros publisher
     vision_result_pub = rospy.Publisher('/rasendriya/dropzone', Dropzone, queue_size=5)
-    rate = rospy.Rate(15)
+    rate = rospy.Rate(25)
     vision_result = Dropzone()
     
     # initialize ros subscriber
