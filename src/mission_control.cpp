@@ -8,6 +8,8 @@
 #include "mavros_msgs/CommandCode.h"
 #include "mavros_msgs/Altitude.h"
 
+#include "geometry_msgs/TwistStamped.h"
+
 #include "sensor_msgs/NavSatFix.h"
 
 #include "std_msgs/Bool.h"
@@ -28,7 +30,7 @@ void waypoint_reached_callback(const mavros_msgs::WaypointReached& wp_reached){
 
 int x_pixel, y_pixel;
 float alt, gps_long, gps_lat, gps_hdg;
-float local_pos_x, local_pos_y;
+float vel_x;
 bool mission_flag;
 
 void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
@@ -47,6 +49,10 @@ void alt_callback(const mavros_msgs::Altitude& alt_data){
 
 void gps_hdg_callback(const std_msgs::Float64& gps_hdg_data){
 	gps_hdg = gps_hdg_data.data;
+}
+
+void vel_callback(const geometry_msgs::TwistStamped& vel_data){
+	vel_y = vel_data.twist.linear.y;
 }
 
 void mission_flag_callback(const std_msgs::Bool& mis_flag){
@@ -96,12 +102,26 @@ float degrees(float _rad) {
 	return _rad*(180/3.14159);
 }
 
+// projectile motion calculator API
+
+float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
+	float gravity = 9.81; // m/s^2
+	float ball_mass = 0.1; // in kg
+	
+	y = (vel_y*ball_mass/_drag_coeff)*(1-exp(-(1-(pow(_drag_coeff,2)*_drop_alt)/(pow(ball_mass, 2)*gravity))));
+	return y;
+}
+
+// coordinate calculator API
+
 void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset){
 	
-	float focal_length = 3*1e-3; // need to tune
+	float focal_length_x = 3*1e-3; // need to calibrate
+	float focal_length_y = 3*1e-3; // need to calibrate
+	float pixel_to_mm = 0.2645; // in mm
 
-	float X_meter = x_pixel*alt/focal_length;
-	float Y_meter = y_pixel*alt/focal_length;
+	float X_meter = x_pixel*pixel_to_mm*alt/focal_length_x;
+	float Y_meter = y_pixel*pixel_to_mm*alt/focal_length_y;
 	
 	float pi = 3.14159;
 	float R_earth = 6378.1*1e3;
@@ -116,7 +136,6 @@ void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset){
 	// using haversine law
 	_tgt_laty = degrees(asin(sin(lat)*cos(r_dist/R_earth) + cos(lat)*sin(r_dist/R_earth)*cos(hdg+cam_angle)));
 	_tgt_lonx = degrees(lon + atan2(sin(hdg+cam_angle)*sin(r_dist/R_earth)*cos(lat) , (cos(r_dist/R_earth)-sin(lat)*sin(_tgt_laty))));
-
 }
 
 // MAIN FUNCTION //
@@ -124,9 +143,9 @@ void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset){
 int main(int argc, char **argv) {
 	int mission_repeat_counter = 0;
 	int hit_count = 0;
+	int calc_mode;
 
-	float tgt_laty, tgt_lonx, dropping_altitude;
-	float dropping_offset;
+	float tgt_laty, tgt_lonx;
 
 	std_msgs::Bool vision_flag;
 
@@ -142,13 +161,23 @@ int main(int argc, char **argv) {
 	ros::Subscriber gps_coordinate_sub= nh.subscribe("/mavros/global_position/global", 1, gps_callback);
 	ros::Subscriber alt_sub = nh.subscribe("/mavros/altitude", 1, alt_callback);
 	ros::Subscriber gps_hdg_sub = nh.subscribe("/mavros/global_position/compass_hdg", 1, gps_hdg_callback);
+	ros::Subscriber vel_sub = nh.subscribe("/mavros/global_position/gp_vel", 1, vel_callback);
 
 	ros::Publisher vision_flag_publisher = nh.advertise<std_msgs::Bool>("/rasendriya/vision_flag", 1, true);
 
-	ros::Rate rate(15);
-
-	ros::param::get("/rasendriya/dropping_offset", dropping_offset);
+	ros::Rate rate(25);
+	
+	// ROS LAUNCH PARAMETERS
+	
+	int calc_mode;
+	ros::param::get("/rasendriya/calc_mode, calc_mode);
+	
+	float dropping_offset, dropping_altitude, drag_coeff;
+	if(calc_mode == 1) {
+		ros::param::get("/rasendriya/dropping_offset", dropping_offset);
+	}
 	ros::param::get("/rasendriya/dropping_altitude", dropping_altitude);
+	ros::param::get("/rasendriya/drag_coefficient", drag_coeff);
 
 	while(ros::ok()) {
 		
@@ -184,6 +213,10 @@ int main(int argc, char **argv) {
 			if(hit_count >= 3){
 				
 				ROS_INFO_ONCE("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+				
+				if(calc_mode == 2) {
+					dropping_offset = calc_projectile_distance(dropping_altitude, drag_coeff);
+				}
 				
 				// calculate target coordinate
 				calc_drop_coord(tgt_laty, tgt_lonx, dropping_offset);
