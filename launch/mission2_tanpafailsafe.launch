@@ -2,14 +2,24 @@
 
     <rosparam param="mavros/system_id">1</rosparam>
     <rosparam param="mavros/component_id">240</rosparam>
-    
-    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
-    
+        
+    <!-- 
+    this argument determines the video address of camera (usually /dev/video0).
+    You can check by writing v4l2-ctl list-devices in terminal 
+    -->
     <arg name="camera_num" default="0" />
     <node name="vision_dropzone" pkg="rasendriya" type="vision_dropzone.py" args="$(arg camera_num)" output="screen"/>
     
-    <param name="/rasendriya/dropping_offset" type="float" value="2.1" />
-    <param name="/rasendriya/dropping_altitude" type="float" value="1.2" />
+    <!-- 
+    this argument determines the calculation dropping mode
+    calc_mode:=1 means the drop calculation will not using projectile motion calculator
+    calc_mode:=2 means the drop calculation will use projectile motion calculator
+    -->
+    <arg name="calc_mode" default="2" />
+    <param name="/rasendriya/dropping_offset" value="2.1" />
+    <param name="/rasendriya/dropping_altitude" value="1.2" />
+    <param name="/rasendriya/drag_coefficient" value="0.6" />
+    <param name="/rasendriya/calc_mode" value="$(arg calc_mode)" />
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
     
     <!-- <include file="$(find mavros)/launch/apm.launch"/> -->
