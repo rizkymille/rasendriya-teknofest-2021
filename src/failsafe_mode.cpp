@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
 	ros::Rate rate(10);
 
 	bool fs_engage = false;
+	bool change_mode_flag = false;
 
 	ROS_INFO("Rasendriya package launched");
 
@@ -57,21 +58,24 @@ int main(int argc, char **argv) {
 	}
 	
 	while(ros::ok() && fs_engage) {
-		// set MANUAL mode
-		mavros_msgs::SetMode flight_mode;
-		flight_mode.request.custom_mode = "MANUAL";
+		if(!change_mode_flag) {
+			// set MANUAL mode
+			mavros_msgs::SetMode flight_mode;
+			flight_mode.request.custom_mode = "MANUAL";
 
-		// DISARM
-		mavros_msgs::CommandBool arm_mode;
-		arm_mode.request.value = 0;
+			// DISARM
+			mavros_msgs::CommandBool arm_mode;
+			arm_mode.request.value = 0;
 
-		if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
-			ROS_WARN("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
-			sleep(2);
-		}
-		else {
-			ROS_ERROR("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
-			sleep(2);
+			if (set_mode_client.call(flight_mode) && set_arm_client.call(arm_mode)) {
+				ROS_WARN("OVERRIDING CONTROL. PLANE AT FAILSAFE MODE");
+				sleep(2);
+			}
+			else {
+				ROS_ERROR("WARNING: FAILED TO OVERRIDE FAILSAFE MODE");
+				sleep(2);
+			}
+			change_mode_flag = true;
 		}
 
 		// FAILSAFE CONTROL SURFACE
