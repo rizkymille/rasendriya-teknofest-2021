@@ -5,11 +5,24 @@ For Teknofest 2021, Rasendriya has two missions: Flying in oval track and loiter
 
 ## Mission Details
 ### Mission 1
-Mission 1 consist of flying in oval track and loiter in pole with small radius. No computer vision required.
+Mission 1 consist of flying in oval track and loiter in pole with small radius.
 ### Mission 2
 Mission 2 also similar to mission 1. But instead of flying in oval track, the plane must track the dropzone and drop the payload 2 times.
-## Mission Flow and Algorithm
-More to write later
+
+## How This Program Works (Algorithm)
+The ROS Rasendriya package acts as object detector and 'automated GCS'. Flowchart of this program can be seen below:
+
+Overall, this program can be splitted as these parts:
+### Object Detection
+This package detects dropzone by two main principles: color filtering, and shape detecting. The vision_dropzone.py program will turn red color into white and turn other color into black. Then, the program will detect circle shape by using Circle Hough Transform. The result of this process is pixel coordinate of circle center.
+### Camera Projection
+After circle center coordinate is found, it must be converted to real-life unit, like meter. This is possible by using camera projection formula, which uses focal length. That's why it's very recommended to calibrate your camera first to get the intrinsics value.
+### Coordinate Transformation
+The real life coordinate value still not enough because this UAV use GPS, which uses WGS84 system. To transform this coordinate system, haversine law is used.
+### Waypoint Planning and Pushing
+After all required data is completed, then the package will send waypoints command to pixhawk.  
+If dropzone coordinate is found, then the program will command pixhawk to repeat mission and send waypoint commands to lower height at certain coordinate and release the payload servos. 
+
 
 ## Setup
 ### Prerequisites
@@ -17,9 +30,6 @@ More to write later
 
 #### Companion Computer
 - Ubuntu MATE 20.04 LTS for Raspberry Pi 4B 4GB
-
-#### Desktop
-- Ubuntu 20.04 LTS Focal Fossa
 
 #### Libraries
 - OpenCV 4
