@@ -30,7 +30,7 @@ void waypoint_reached_callback(const mavros_msgs::WaypointReached& wp_reached){
 
 int x_pixel, y_pixel;
 float alt, gps_long, gps_lat, gps_hdg;
-float vel_x;
+float vel_y;
 bool mission_flag;
 
 void dropzone_target_callback(const rasendriya::Dropzone& dropzone_loc){
@@ -108,7 +108,7 @@ float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
 	float gravity = 9.81; // m/s^2
 	float ball_mass = 0.1; // in kg
 	
-	y = (vel_y*ball_mass/_drag_coeff)*(1-exp(-(1-(pow(_drag_coeff,2)*_drop_alt)/(pow(ball_mass, 2)*gravity))));
+	float y = (vel_y*ball_mass/_drag_coeff)*(1-exp(-(1-(pow(_drag_coeff,2)*_drop_alt)/(pow(ball_mass, 2)*gravity))));
 	return y;
 }
 
@@ -143,7 +143,6 @@ void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset){
 int main(int argc, char **argv) {
 	int mission_repeat_counter = 0;
 	int hit_count = 0;
-	int calc_mode;
 
 	float tgt_laty, tgt_lonx;
 
