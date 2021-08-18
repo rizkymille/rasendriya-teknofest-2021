@@ -113,7 +113,6 @@ int main(int argc, char **argv) {
 		std_msgs::Bool mission_flag;
 		mission_flag.data = false;
 		mission_flag_publisher.publish(mission_flag);
-		rate.sleep();
 
 		ros::spinOnce();
 		rate.sleep();
