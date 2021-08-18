@@ -175,8 +175,10 @@ int main(int argc, char **argv) {
 	if(calc_mode == 1) {
 		ros::param::get("/rasendriya/dropping_offset", dropping_offset);
 	}
+	else if(calc_mode == 2) {
+		ros::param::get("/rasendriya/drag_coefficient", drag_coeff);
+	}
 	ros::param::get("/rasendriya/dropping_altitude", dropping_altitude);
-	ros::param::get("/rasendriya/drag_coefficient", drag_coeff);
 
 	while(ros::ok()) {
 		
@@ -212,13 +214,17 @@ int main(int argc, char **argv) {
 			if(hit_count >= 3){
 				
 				ROS_INFO_ONCE("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
-				
-				if(calc_mode == 2) {
-					dropping_offset = calc_projectile_distance(dropping_altitude, drag_coeff);
+
+				if(calc_mode != 3) {
+					if(calc_mode == 2) dropping_offset = calc_projectile_distance(dropping_altitude, drag_coeff);			
+					
+					// calculate target coordinate
+					calc_drop_coord(tgt_laty, tgt_lonx, dropping_offset);
 				}
-				
-				// calculate target coordinate
-				calc_drop_coord(tgt_laty, tgt_lonx, dropping_offset);
+				else {
+					tgt_laty = gps_lat;
+					tgt_lonx = gps_long;
+				}
 				
 				// send do jump command to WP 1 from WP 4 after dropzone has found as WP 5
 				mavros_msgs::Waypoint wp_repeat;
