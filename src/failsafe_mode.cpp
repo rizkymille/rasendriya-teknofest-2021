@@ -6,6 +6,18 @@
 #include "mavros_msgs/CommandBool.h"
 #include "std_msgs/Bool.h"
 
+// TIMER CALLBACKS //
+bool fs_engage = false;
+
+void short_fs_timer_callback(const ros::TimerEvent& short_event) {
+	fs_engage = true;
+}
+
+void long_fs_timer_callback(const ros::TimerEvent& long_event) {
+	fs_engage = true;
+}
+
+
 int RSSI;
 int RC_IN_THR;
 
@@ -18,6 +30,9 @@ void radio_status_callback(const mavros_msgs::RadioStatus& radio_signal_data) {
 }
 
 int main(int argc, char **argv) {
+	float FS_SHORT_TIMEOUT = 1.5;
+	float FS_LONG_TIMEOUT = 40;
+
 	ros::init(argc, argv, "failsafe_mode");
 	ros::NodeHandle nh;
 
@@ -33,31 +48,36 @@ int main(int argc, char **argv) {
 
 	ros::Rate rate(10);
 
-	bool fs_engage = false;
 	bool change_mode_flag = false;
+
+	// create timers for failsafe
+	ros::Timer short_fs_timer = nh.createTimer(ros::Duration(FS_SHORT_TIMEOUT), short_fs_timer_callback);
+	ros::Timer long_fs_timer = nh.createTimer(ros::Duration(FS_LONG_TIMEOUT), long_fs_timer_callback);
 
 	ROS_INFO("Rasendriya package launched");
 
-	while(ros::ok() && !fs_engage){
+	while(ros::ok()){
 		
 		ROS_INFO_ONCE("Failsafe mode ready");
-		
-		if(RC_IN_THR < 950) {
-			sleep(1.5); // FS_SHORT_TIMEOUT
-			fs_engage = true;
+
+		while(!fs_engage) {
+			if(RC_IN_THR < 950) {
+				short_fs_timer.setPeriod(ros::Duration(FS_SHORT_TIMEOUT));
+				short_fs_timer.start();
+			}
+			else if(RSSI == 0) {
+				long_fs_timer.setPeriod(ros::Duration(FS_LONG_TIMEOUT));
+				long_fs_timer.start();
+			}
+			else {
+				short_fs_timer.stop();
+				long_fs_timer.stop();
+				fs_engage = false;
+			}
+			ros::spinOnce();
+			rate.sleep();
 		}
-		else if(RSSI == 0) {
-			sleep(40); // FS_LONG_TIMEOUT
-			fs_engage = true;
-		}
-		else {
-			fs_engage = false;
-		}
-		ros::spinOnce();
-		rate.sleep();
-	}
-	
-	while(ros::ok() && fs_engage) {
+
 		if(!change_mode_flag) {
 			// set MANUAL mode
 			mavros_msgs::SetMode flight_mode;
@@ -93,6 +113,9 @@ int main(int argc, char **argv) {
 		std_msgs::Bool mission_flag;
 		mission_flag.data = false;
 		mission_flag_publisher.publish(mission_flag);
+		rate.sleep();
+
+		ros::spinOnce();
 		rate.sleep();
 	}
 	
