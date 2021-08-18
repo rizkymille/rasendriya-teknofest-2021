@@ -1,5 +1,5 @@
 # Rasendriya
-!['Rasendriya Logo'](https://github.com/rizkymille/rasendriya-teknofest-2021/blob/main/docs/rasendriyalogo.png)  
+!['Rasendriya Logo'](https://github.com/rizkymille/rasendriya-teknofest-2021/blob/main/docs/logo.png)  
 Rasendriya is a lightweight fixed wing UAV from AUAV UI for Tübitak International Unmanned Aerial Vehicle (UAV) Teknofest Competition in Bursa, Turkey.
 
 For Teknofest 2021, Rasendriya has two missions: Flying in oval track and loiter in one point with small radius, and flying in oval track for 3 laps while dropping two payloads in a designated dropzone. The designated dropzone must be found autonomously by using computer vision system.
@@ -30,7 +30,7 @@ If dropzone coordinate is found, then the program will command pixhawk to repeat
 - ROS Noetic Ninjemys
 
 #### Companion Computer
-- Ubuntu MATE 20.04 LTS for Raspberry Pi 4B 4GB
+- Ubuntu MATE 20.04 LTS for Raspberry Pi 4B
 
 #### Libraries
 - OpenCV 4
