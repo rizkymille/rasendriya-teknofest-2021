@@ -169,6 +169,11 @@ add_executable(test_servo
 target_link_libraries(test_servo
     ${catkin_LIBRARIES})
 
+add_executable(test_waypoint
+    src/testing/test_waypoint.cpp)
+target_link_libraries(test_waypoint
+    ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############

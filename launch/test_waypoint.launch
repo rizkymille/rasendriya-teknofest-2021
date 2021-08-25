@@ -1,0 +1,7 @@
+<launch>
+    <rosparam param="mavros/system_id">1</rosparam>
+    <rosparam param="mavros/component_id">240</rosparam>
+    
+    <node name="test_waypoint" pkg="rasendriya" type="test_waypoint" output="screen"/>
+    
+</launch>
