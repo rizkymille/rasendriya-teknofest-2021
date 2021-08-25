@@ -12,10 +12,14 @@
     
     <!-- 
     this argument determines the calculation dropping mode
-    calc_mode:=1 means the drop calculation will not using projectile motion calculator
-    calc_mode:=2 means the drop calculation will use projectile motion calculator
+    | Camera Projection Modes |
+    calc_mode:=1 projectile motion calculator is not used
+    calc_mode:=2 projectile motion calculator is used
+    | Non-camera Projection Modes |
+    calc_mode:=3 projectile motion calculator is not used 
+    calc_mode:=4 projectile motion calculator is used
     -->
-    <arg name="calc_mode" default="1" />
+    <arg name="calc_mode" default="4" />
     <param name="/rasendriya/dropping_offset" value="3" />
     <param name="/rasendriya/dropping_altitude" value="8" />
     <param name="/rasendriya/drag_coefficient" value="0.6" />
