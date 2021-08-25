@@ -1,7 +1,7 @@
 <?xml version="2.2"?>
 <package format="2">
   <name>rasendriya</name>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <description>ROS package for Team Rasendriya AUAV UI in Teknofest 2021</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
