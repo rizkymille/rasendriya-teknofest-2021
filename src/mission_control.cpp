@@ -108,8 +108,8 @@ float degrees(float _rad) {
 // projectile motion calculator API
 
 float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
-	float gravity = 9.81; // m/s^2
-	float ball_mass = 0.1; // in kg
+	const float gravity = 9.81; // m/s^2
+	const float ball_mass = 0.1; // in kg
 	
 	float y = (vel_y*ball_mass/_drag_coeff)*(1-exp(-(1-(pow(_drag_coeff,2)*_drop_alt)/(pow(ball_mass, 2)*gravity))));
 	return y;
@@ -119,7 +119,7 @@ float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
 
 void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset, int _calc_mode){
 	const float pi = 3.14159;
-	const	float R_earth = 6378.1*1e3;
+	const float R_earth = 6378.1*1e3;
 	
 	float hdg = radians(gps_hdg);
 	float lat = radians(gps_lat);
@@ -127,12 +127,12 @@ void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset, int
 	float cam_angle, r_dist;
 
 	if(_calc_mode <= 2) {
-		float focal_length_x = 3; // units in mm. need to calibrate
-		float focal_length_y = 3; // units in mm. need to calibrate
-		const float pixel_to_mm = 0.2645; // in mm
+		const double focal_length_x = 1.3817707364539*1e3; // calibrated result
+		const double focal_length_y = 1.3766463458240*1e3; // calibrated result
+		//const float pixel_to_mm = 0.2645;
 
-		float X_meter = x_pixel*pixel_to_mm*alt/focal_length_x;
-		float Y_meter = y_pixel*pixel_to_mm*alt/focal_length_y;
+		float X_meter = x_pixel*alt/focal_length_x;
+		float Y_meter = y_pixel*alt/focal_length_y;
 		
 		r_dist = sqrt(pow(X_meter, 2) + pow(Y_meter + _drop_offset, 2));
 		cam_angle = radians(atan2(X_meter, Y_meter));
