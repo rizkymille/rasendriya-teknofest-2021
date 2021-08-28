@@ -30,10 +30,10 @@ def get_parameters():
 
 def param_trackbar():
     cv2.namedWindow('Hough parameter tune')
-    cv2.createTrackbar('dp (x10)', 'Hough parameter tune', 0, 3, trackbar_callback)
-    cv2.createTrackbar('minDist', 'Hough parameter tune', 0, 400, trackbar_callback)
-    cv2.createTrackbar('param1', 'Hough parameter tune', 0, 400, trackbar_callback)
-    cv2.createTrackbar('param2', 'Hough parameter tune', 0, 200, trackbar_callback)
+    cv2.createTrackbar('dp (x10)', 'Hough parameter tune', 1, 3, trackbar_callback)
+    cv2.createTrackbar('minDist', 'Hough parameter tune', 1, 400, trackbar_callback)
+    cv2.createTrackbar('param1', 'Hough parameter tune', 1, 400, trackbar_callback)
+    cv2.createTrackbar('param2', 'Hough parameter tune', 1, 200, trackbar_callback)
     cv2.createTrackbar('minRadius', 'Hough parameter tune', 0, 400, trackbar_callback)
     cv2.createTrackbar('maxRadius', 'Hough parameter tune', 0, 400, trackbar_callback)
 
@@ -73,15 +73,15 @@ def dropzone_detect():
     
     # parsing arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("integers", metavar='N', type=int, default=0, help='Video source address')
+    parser.add_argument('-va', "--video_address", type=int, default=0, help='Video source address')
     parser.add_argument('-tc', "--tune_color", action='store_true', help='Tune color threshold mode')
     parser.add_argument('-th', "--tune_hough", action='store_true', help='Tune hough parameters mode')
     args = parser.parse_args()
 
-    if args.integers == -1:
+    if args.video_address == -1:
         cam = VideoStream(usePiCamera=False).start()
     else:
-        cam = VideoStream(src=args.integers).start()
+        cam = VideoStream(src=args.video_address).start()
     
     time.sleep(2.)
 
@@ -122,8 +122,8 @@ def dropzone_detect():
                 minRadius=hough_minRadius, maxRadius=hough_maxRadius)
         else:
             circles = cv2.HoughCircles(frame, method=cv2.HOUGH_GRADIENT, dp=1.5, minDist=200,
-                param1=100, param2=30,
-                minRadius=5, maxRadius=120)
+                param1=300, param2=40,
+                minRadius=5, maxRadius=0)
 
         largest_circle_radius = 0
         largest_circle_center = None
