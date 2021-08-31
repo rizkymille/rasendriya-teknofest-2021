@@ -1,0 +1,5 @@
+<launch>
+    
+  <node name="azure_send_hub" pkg="rasendriya" type="azure_send_hub.py" output="screen"/>
+  
+</launch>
