@@ -19,6 +19,7 @@
 #include "std_msgs/Float64.h"
 
 #include <math.h>
+#include <bits/stdc++.h>
 
 // REMINDER: wp_num STARTS FROM 0
 
@@ -32,7 +33,7 @@ void waypoint_reached_callback(const mavros_msgs::WaypointReached& wp_reached){
 
 int x_pixel, y_pixel;
 float alt, gps_long, gps_lat, gps_hdg;
-float vel_y;
+float vel_y, vel_z;
 bool mission_flag;
 
 mavros_msgs::WaypointPush waypoint_push;
@@ -57,6 +58,7 @@ void gps_hdg_callback(const std_msgs::Float64& gps_hdg_data){
 
 void vel_callback(const geometry_msgs::TwistStamped& vel_data){
 	vel_y = vel_data.twist.linear.y;
+	vel_z = vel_data.twist.linear.z;
 }
 
 void mission_flag_callback(const std_msgs::Bool& mis_flag){
@@ -107,12 +109,33 @@ float degrees(float _rad) {
 
 // projectile motion calculator API
 
-float calc_projectile_distance(float _drop_alt, float _drag_coeff) {
-	const float gravity = 9.81; // m/s^2
-	const float ball_mass = 0.1; // in kg
-	
-	float y = (vel_y*ball_mass/_drag_coeff)*(1-exp(-(1-(pow(_drag_coeff,2)*_drop_alt)/(pow(ball_mass, 2)*gravity))));
-	return y;
+const float gravity = 9.81; // m/s^2
+#define EPSILON 0.01
+
+float projectile_func(float& _drop_offset, float _drop_alt, float _drag_coeff, float _vert_speed, float _hor_speed) {
+	return _drop_alt + (_vert_speed+gravity/(2*_drag_coeff*_hor_speed))*_drop_offset/_hor_speed - gravity/(4*pow(_drag_coeff*_hor_speed, 2))*(exp(2*_drag_coeff*_drop_offset) -1);
+}
+
+float projectile_func_deriv(float& _drop_offset, float _drag_coeff, float _vert_speed, float _hor_speed) {
+	return (_vert_speed+gravity/(2*_drag_coeff*_hor_speed))*1/_hor_speed - (gravity/4*pow(_drag_coeff*_hor_speed, 2)*(2*_drag_coeff*exp(2*_drag_coeff*_drop_offset)));
+}
+
+
+void calc_projectile_distance(float& _drop_offset, float _drop_alt, float _drag_coeff) {
+	float vert_speed = vel_z;
+	float hor_speed = vel_y;
+	float h;
+
+	// using newton-raphson technique
+	do {
+		h = projectile_func(_drop_offset, _drop_alt, _drag_coeff, vert_speed, hor_speed)/projectile_func_deriv(_drop_offset, _drag_coeff, vert_speed, hor_speed);
+		// x(i+1) = x(i) - f(x) / f'(x) 
+		_drop_offset = _drop_offset - h;
+	}
+  while (abs(h) >= EPSILON);
+
+	return;
+
 }
 
 // coordinate calculator API
@@ -195,7 +218,7 @@ int main(int argc, char **argv) {
 	while(ros::ok()) {
 		if(waypoint_push.request.waypoints.size() != 0) {
 			ROS_INFO("Number of loaded waypoints: %d", int(waypoint_push.request.waypoints.size()));
-			ROS_INFO("Waypoint load from FCU Completed");
+			ROS_INFO("Waypoint load from FCU completed");
 			break;
 		}
 		ros::spinOnce();
@@ -239,7 +262,8 @@ int main(int argc, char **argv) {
 
 				if(calc_mode % 2 == 0) {
 					ros::param::get("/rasendriya/drag_coefficient", drag_coeff);
-					dropping_offset = calc_projectile_distance(dropping_altitude, drag_coeff);
+					dropping_offset = 0;
+					calc_projectile_distance(dropping_offset, dropping_altitude, drag_coeff);
 				}
 				else {
 					ros::param::get("/rasendriya/dropping_offset", dropping_offset);
