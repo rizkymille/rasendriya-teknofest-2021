@@ -140,7 +140,7 @@ void calc_projectile_distance(float& _drop_offset, float _drop_alt, float _drag_
 
 // coordinate calculator API
 
-void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset, int _calc_mode){
+void calc_drop_coord(float& _tgt_latx, float& _tgt_lony, float _drop_offset, int _calc_mode){
 	const float pi = 3.14159;
 	const float R_earth = 6378.1*1e3;
 	
@@ -166,8 +166,8 @@ void calc_drop_coord(float& _tgt_laty, float& _tgt_lonx, float _drop_offset, int
 	}
 	
 	// using haversine law
-	_tgt_laty = degrees(asin(sin(lat)*cos(r_dist/R_earth) + cos(lat)*sin(r_dist/R_earth)*cos(hdg+cam_angle)));
-	_tgt_lonx = degrees(lon + atan2(sin(hdg+cam_angle)*sin(r_dist/R_earth)*cos(lat) , (cos(r_dist/R_earth)-sin(lat)*sin(_tgt_laty))));
+	_tgt_latx = degrees(asin(sin(lat)*cos(r_dist/R_earth) + cos(lat)*sin(r_dist/R_earth)*cos(hdg+cam_angle)));
+	_tgt_lony = degrees(lon + atan2(sin(hdg+cam_angle)*sin(r_dist/R_earth)*cos(lat) , (cos(r_dist/R_earth)-sin(lat)*sin(_tgt_latx))));
 }
 
 // MAIN FUNCTION //
@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
 	int mission_repeat_counter = 0;
 	int hit_count = 0;
 
-	float tgt_laty, tgt_lonx;
+	float tgt_latx, tgt_lony;
 
 	std_msgs::Bool vision_flag;
 
@@ -237,7 +237,7 @@ int main(int argc, char **argv) {
 			}
 			
 			// turn on vision node when wp3 has reached
-			if(waypoint_reached == 2 && mission_repeat_counter == 1){
+			if(waypoint_reached == 1 && mission_repeat_counter == 1){
 				vision_flag.data = true;
 				vision_flag_publisher.publish(vision_flag);
 			}
@@ -269,7 +269,7 @@ int main(int argc, char **argv) {
 					ros::param::get("/rasendriya/dropping_offset", dropping_offset);
 				}
 
-				calc_drop_coord(tgt_laty, tgt_lonx, dropping_offset, calc_mode);
+				calc_drop_coord(tgt_latx, tgt_lony, dropping_offset, calc_mode);
 				
 				// send do jump command to WP 1 from WP 4 after dropzone has found as WP 5
 				wp.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
@@ -278,7 +278,7 @@ int main(int argc, char **argv) {
 				wp.autocontinue = true;
 				wp.param1 = 1;
 				wp.param2 = 2;
-				insert_wp(5, wp);
+				insert_wp(4, wp);
 
 				// send plane attitude waypoint for dropping as WP 3 in WP 2
 				wp.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
@@ -287,13 +287,13 @@ int main(int argc, char **argv) {
 				wp.autocontinue = true;
 				wp.param2 = 1;
 				wp.param3 = 0;
-				wp.x_lat = tgt_laty;
-				wp.y_long = tgt_lonx;
+				wp.x_lat = tgt_latx;
+				wp.y_long = tgt_lony;
 				wp.z_alt = dropping_altitude;
-				insert_wp(3, wp);
+				insert_wp(2, wp);
 
 				// send waypoint to drop front ball
-				servo_drop_wp(7, 4, wp);
+				servo_drop_wp(7, 3, wp);
 
 				if(waypoint_push_client.call(waypoint_push) && waypoint_pull_client.call(waypoint_pull)){
 					ROS_INFO("FIRST WAYPOINT NAVIGATION DROP SENT");
@@ -307,8 +307,8 @@ int main(int argc, char **argv) {
 
 			// send drop back ball
 			if(mission_repeat_counter == 3){
-				erase_wp(4);
-				servo_drop_wp(8, 4, wp);
+				erase_wp(3);
+				servo_drop_wp(8, 3, wp);
 
 				if(waypoint_push_client.call(waypoint_push) && waypoint_pull_client.call(waypoint_pull)){
 					ROS_INFO("SECOND WAYPOINT NAVIGATION DROP SENT");
