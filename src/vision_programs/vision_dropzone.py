@@ -67,7 +67,7 @@ def dropzone_detect():
 
             # circle detection using hough transform
             circles = cv2.HoughCircles(frame, method=cv2.HOUGH_GRADIENT, dp=1.5, minDist=200,
-                param1=100, param2=30,
+                param1=400, param2=40,
                 minRadius=5, maxRadius=120)
 
             largest_circle_radius = 0

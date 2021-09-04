@@ -122,8 +122,8 @@ def dropzone_detect():
                 minRadius=hough_minRadius, maxRadius=hough_maxRadius)
         else:
             circles = cv2.HoughCircles(frame, method=cv2.HOUGH_GRADIENT, dp=1.5, minDist=200,
-                param1=300, param2=40,
-                minRadius=5, maxRadius=0)
+                param1=400, param2=40,
+                minRadius=5, maxRadius=120)
 
         largest_circle_radius = 0
         largest_circle_center = None
