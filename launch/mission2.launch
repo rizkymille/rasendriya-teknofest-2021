@@ -23,7 +23,7 @@
     -->
     <arg name="calc_mode" default="4" />
     <param name="/rasendriya/dropping_offset" value="3" />
-    <param name="/rasendriya/dropping_altitude" value="8" />
+    <param name="/rasendriya/dropping_altitude" value="30" />
     <param name="/rasendriya/drag_coefficient" value="0.6" />
     <param name="/rasendriya/calc_mode" value="$(arg calc_mode)" />
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
