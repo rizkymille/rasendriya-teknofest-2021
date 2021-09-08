@@ -32,7 +32,8 @@ void waypoint_reached_callback(const mavros_msgs::WaypointReached& wp_reached){
 // CALLBACKS //
 
 int x_pixel, y_pixel;
-float alt, gps_long, gps_lat, gps_hdg;
+float alt, gps_hdg;
+double gps_long, gps_lat;
 float vel_y, vel_z;
 bool mission_flag;
 
@@ -140,13 +141,13 @@ void calc_projectile_distance(float& _drop_offset, float _drop_alt, float _drag_
 
 // coordinate calculator API
 
-void calc_drop_coord(float& _tgt_latx, float& _tgt_lony, float _drop_offset, int _calc_mode){
+void calc_drop_coord(double& _tgt_latx, double& _tgt_lony, float _drop_offset, int _calc_mode){
 	const float pi = 3.14159;
 	const float R_earth = 6378.1*1e3;
 	
 	float hdg = radians(gps_hdg);
-	float lat = radians(gps_lat);
-	float lon = radians(gps_long);
+	double lat = radians(gps_lat);
+	double lon = radians(gps_long);
 	float cam_angle, r_dist;
 
 	if(_calc_mode <= 2) {
@@ -176,7 +177,7 @@ int main(int argc, char **argv) {
 	int mission_repeat_counter = 0;
 	int hit_count = 0;
 
-	float tgt_latx, tgt_lony;
+	double tgt_latx, tgt_lony;
 
 	std_msgs::Bool vision_flag;
 
