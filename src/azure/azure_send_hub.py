@@ -11,6 +11,7 @@ from geometry_msgs.msg import TwistStamped
 from sensor_msgs.msg import NavSatFix
 from std_msgs.msg import Float64
 
+# global variable initialization
 gps_long, gps_lat, gps_rel_alt, gps_hdg = 0
 vel_x, vel_y, vel_z = 0
 
