@@ -27,6 +27,15 @@
     <param name="/rasendriya/dropping_altitude" value="30" />
     <param name="/rasendriya/drag_coefficient" value="0.6" />
     <param name="/rasendriya/calc_mode" value="$(arg calc_mode)" />
+
+    <!--
+    simpler method. using coordinate rewriting only
+    -->
+    <param name="/rasendriya/wp_drop_first" value="10" />
+    <param name="/rasendriya/wp_drop_second" value="18" />
+
+    <param name="/rasendriya/wp_prepare_scan" value="3" />
+    
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
     
 </launch>

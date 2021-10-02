@@ -69,34 +69,6 @@ void waypoint_list_callback(const mavros_msgs::WaypointList& wplist) {
 	waypoint_push.request.waypoints = wplist.waypoints;
 }
 
-/*
-	WAYPOINT MODIFIER APIs
-*/
-
-void insert_wp(int _wp_num, const mavros_msgs::Waypoint& _wp){	
-	waypoint_push.request.waypoints.insert(waypoint_push.request.waypoints.begin() + _wp_num, _wp);
-}
-
-void erase_wp(int _wp_num){
-	waypoint_push.request.waypoints.erase(waypoint_push.request.waypoints.begin() + _wp_num);
-}
-
-void swap_wp(int _wp_num, const mavros_msgs::Waypoint& _wp) {
-	erase_wp(_wp_num);
-	insert_wp(_wp_num, _wp);
-}
-
-void servo_drop_wp(int servo_ch, int wp_drop_num, mavros_msgs::Waypoint& _wp){
-	_wp.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
-	_wp.command = mavros_msgs::CommandCode::DO_SET_SERVO;
-	_wp.is_current = true;
-	_wp.autocontinue = true;
-	_wp.param1 = servo_ch;
-	_wp.param2 = 1100;
-
-	insert_wp(wp_drop_num, _wp);
-}
-
 // mathematical conversion APIs because c++ library doesn't have it. math.h sucks 
 
 float radians(float _deg) {
@@ -109,8 +81,8 @@ float degrees(float _rad) {
 
 // projectile motion calculator API
 
-const float gravity = 9.81; // m/s^2
-#define EPSILON 0.01
+#define gravity 9.81; // m/s^2
+#define error_criterion 0.01 // error interpolation criterion
 
 float projectile_func(float& _drop_offset, float _drop_alt, float _drag_coeff, float _vert_speed, float _hor_speed) {
 	return _drop_alt + (_vert_speed+gravity/(2*_drag_coeff*_hor_speed))*_drop_offset/_hor_speed - gravity/(4*pow(_drag_coeff*_hor_speed, 2))*(exp(2*_drag_coeff*_drop_offset) -1);
@@ -129,10 +101,9 @@ void calc_projectile_distance(float& _drop_offset, float _drop_alt, float _drag_
 	// using newton-raphson technique
 	do {
 		h = projectile_func(_drop_offset, _drop_alt, _drag_coeff, vert_speed, hor_speed)/projectile_func_deriv(_drop_offset, _drag_coeff, vert_speed, hor_speed);
-		// x(i+1) = x(i) - f(x) / f'(x) 
-		_drop_offset = _drop_offset - h;
+		_drop_offset -= h; // x(i+1) = x(i) - f(x) / f'(x) 
 	}
-  while (abs(h) >= EPSILON);
+  	while (abs(h) >= error_criterion);
 
 	return;
 
@@ -214,6 +185,12 @@ int main(int argc, char **argv) {
 	float dropping_offset, dropping_altitude, drag_coeff;
 	ros::param::get("/rasendriya/dropping_altitude", dropping_altitude);
 
+	int wp_drop_first, wp_drop_second, wp_prepare_scan;
+	ros::param::get("/rasendriya/wp_drop_first", wp_drop_first);
+	ros::param::get("/rasendriya/wp_drop_second", wp_drop_second);
+	ros::param::get("/rasendriya/wp_prepare_scan", wp_prepare_scan);
+	int wp_drop[2] = [wp_drop_first, wp_drop_second];
+
 	// first WP loading from FCU. Ensures that companion computer has the same waypoints as FCU
 	while(ros::ok()) {
 		if(waypoint_push.request.waypoints.size() != 0) {
@@ -231,20 +208,15 @@ int main(int argc, char **argv) {
 		
 		if(mission_flag) {
 			ROS_INFO_ONCE("Mission program started");
-			// increase counter if wp3 reached
-			if(waypoint_reached == 1){
-				++mission_repeat_counter;
-			}
 			
 			// turn on vision node when wp3 has reached
-			if(waypoint_reached == 1 && mission_repeat_counter == 1){
+			if(waypoint_reached == wp_prepare_scan - 1){
 				vision_flag.data = true;
 				vision_flag_publisher.publish(vision_flag);
 			}
 			else {
 				vision_flag.data = false;
 				vision_flag_publisher.publish(vision_flag);
-				ROS_INFO_ONCE("Vision program stopped");
 			}
 
 			// dropzone found, confirm by wait for hit_point
@@ -258,7 +230,7 @@ int main(int argc, char **argv) {
 			// dropzone confirmed
 			if(hit_count >= 3){
 				
-				ROS_INFO_ONCE("DROPZONE TARGET ACQUIRED. PROCEED TO EXECUTE DROPPING SEQUENCE");
+				ROS_INFO_ONCE("Dropzone target acquired! Sending new coordinates");
 
 				if(calc_mode % 2 == 0) {
 					ros::param::get("/rasendriya/drag_coefficient", drag_coeff);
@@ -270,55 +242,23 @@ int main(int argc, char **argv) {
 				}
 
 				calc_drop_coord(tgt_latx, tgt_lony, dropping_offset, calc_mode);
-				
-				// send do jump command to WP 1 from WP 4 after dropzone has found as WP 5
-				wp.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
-				wp.command = mavros_msgs::CommandCode::DO_JUMP;
-				wp.is_current = false;
-				wp.autocontinue = true;
-				wp.param1 = 1;
-				wp.param2 = 2;
-				insert_wp(4, wp);
 
-				// send plane attitude waypoint for dropping as WP 3 in WP 2
-				wp.frame = mavros_msgs::Waypoint::FRAME_GLOBAL_REL_ALT;
-				wp.command = mavros_msgs::CommandCode::NAV_WAYPOINT;
-				wp.is_current = false;
-				wp.autocontinue = true;
-				wp.param2 = 1;
-				wp.param3 = 0;
-				wp.x_lat = tgt_latx;
-				wp.y_long = tgt_lony;
-				wp.z_alt = dropping_altitude;
-				insert_wp(2, wp);
-
-				// send waypoint to drop front ball
-				servo_drop_wp(7, 3, wp);
+				// change WP NAV directly before dropping
+				for(int i = 0; i <= 1; i++) {
+					waypoint_push.request.waypoints[wp_drop[i] - 1].x_lat = tgt_latx;
+					waypoint_push.request.waypoints[wp_drop[i] - 1].y_long = tgt_lony;
+				}
 
 				if(waypoint_push_client.call(waypoint_push) && waypoint_pull_client.call(waypoint_pull)){
-					ROS_INFO("FIRST WAYPOINT NAVIGATION DROP SENT");
+					ROS_INFO("Image processed coordinates sent");
 				}
 				else {
-					ROS_WARN("FAILED TO SEND FIRST WAYPOINT NAVIGATION DROP");
+					ROS_WARN("Failed to send image processed coordinates. Using written default coordinate");
 				}
 
 				hit_count = 0;
 			}
 
-			// send drop back ball
-			if(mission_repeat_counter == 3){
-				erase_wp(3);
-				servo_drop_wp(8, 3, wp);
-
-				if(waypoint_push_client.call(waypoint_push) && waypoint_pull_client.call(waypoint_pull)){
-					ROS_INFO("SECOND WAYPOINT NAVIGATION DROP SENT");
-				}
-				else {
-					ROS_WARN("FAILED TO SEND SECOND WAYPOINT NAVIGATION DROP");
-				}
-
-				mission_repeat_counter = 0;
-			}
 		}
 
 		ros::spinOnce();
