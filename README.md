@@ -10,6 +10,28 @@ Mission 1 consist of flying in oval track and loiter in pole with small radius.
 ### Mission 2
 Mission 2 also similar to mission 1. But instead of flying in oval track, the plane must track the dropzone and drop the payload 2 times.
 
+## Short branch explanation
+There's so many branch because I'm still learning programming when creating this ROS program, so the program always got updated to be more efficent and sophisticated. I don't want to delete the older version because it has some good programming example. To avoid confusion, I will explain what's the difference between every branch:
+#### "main" branch
+This is the program I originally want to use for the flight testing and even to the final competition. Feature:
+- Waypoint manipulator API
+Manipulate waypoint in pixhawk when flying using this API. It feels like "automated GCS". It can swap, erase, and insert waypoints
+- Write waypoint API
+Create servo dropping waypoint autonomously when flying.
+#### "simpler" branch
+This is the program I thought in day 5 of the competition, because how prone to fail image processing can be. Feature:
+- Waypoint rewrite
+Rewrite some waypoint values (like latitude and longitude). If the image processing fails to get the coordinate, it still uses default coordinate GCS write before launch. 
+#### "azure" branch
+This is the branch I created when Microsoft agree to be AUAV sponsor. Feature:
+- Azure IoT Hub
+Sending ROS data directly from pixhawk to Azure IoT Hub in real-time. Works by dumping data into JSON format first and then send it into Azure cloud.
+#### "complex" branch
+This is the first rasendriya program I created because I don't know how ROS/C++ works so I just imitate and modify AUAV VTOL Athena ROS program (you can look at github.com/vtol-auav-ui/athena, forked from Kevin Yosral). Turns out I don't need to create class because the mission program isn't as complex as it seems. Feature:
+- C++ Class
+Good example to learn OOP :)
+
+
 ## How This Program Works (Algorithm)
 The ROS Rasendriya package acts as object detector and 'automated GCS'. Flowchart of this program can be seen below:
 
