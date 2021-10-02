@@ -1,10 +1,11 @@
 <launch>
 
+    <!-- This node will launch MAVROS -->
+    <include file="$(find mavros)/launch/apm.launch"/>
     <rosparam param="mavros/system_id">1</rosparam>
     <rosparam param="mavros/component_id">240</rosparam>
-    
-    <node name="failsafe_mode" pkg="rasendriya" type="failsafe_mode" output="screen"/>
-    
+    <rosparam param="mavros/fcu_url">/dev/ttyACM0:115200</rosparam>
+        
     <!-- 
     this argument determines the video address of camera (usually /dev/video0).
     You can check by writing v4l2-ctl list-devices in terminal 
@@ -27,7 +28,5 @@
     <param name="/rasendriya/drag_coefficient" value="0.6" />
     <param name="/rasendriya/calc_mode" value="$(arg calc_mode)" />
     <node name="mission_control" pkg ="rasendriya" type="mission_control" output="screen"/>
-
-    <!-- <include file="$(find mavros)/launch/apm.launch"/> -->
     
 </launch>
