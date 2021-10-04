@@ -82,7 +82,7 @@ float degrees(float _rad) {
 // projectile motion calculator API
 
 #define gravity 9.81 // m/s^2
-#define error_criterion 0.01 // error interpolation criterion
+#define error_criterion 0.01 // error approximation criterion
 
 float projectile_func(float& _drop_offset, float _drop_alt, float _drag_coeff, float _vert_speed, float _hor_speed) {
 	return _drop_alt + (_vert_speed+gravity/(2*_drag_coeff*_hor_speed))*_drop_offset/_hor_speed - gravity/(4*pow(_drag_coeff*_hor_speed, 2))*(exp(2*_drag_coeff*_drop_offset) -1);
@@ -103,7 +103,7 @@ void calc_projectile_distance(float& _drop_offset, float _drop_alt, float _drag_
 		h = projectile_func(_drop_offset, _drop_alt, _drag_coeff, vert_speed, hor_speed)/projectile_func_deriv(_drop_offset, _drag_coeff, vert_speed, hor_speed);
 		_drop_offset -= h; // x(i+1) = x(i) - f(x) / f'(x) 
 	}
-  	while (abs(h) >= error_criterion);
+  while (abs(h) >= error_criterion);
 
 	return;
 
