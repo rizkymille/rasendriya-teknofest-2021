@@ -154,11 +154,6 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(failsafe_mode
-    src/failsafe_mode.cpp)
-target_link_libraries(failsafe_mode
-    ${catkin_LIBRARIES})
-
 add_executable(mission_control
     src/mission_control.cpp)
 target_link_libraries(mission_control
