@@ -81,7 +81,7 @@ float degrees(float _rad) {
 
 // projectile motion calculator API
 
-#define gravity 9.81; // m/s^2
+#define gravity 9.81 // m/s^2
 #define error_criterion 0.01 // error interpolation criterion
 
 float projectile_func(float& _drop_offset, float _drop_alt, float _drag_coeff, float _vert_speed, float _hor_speed) {
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
 	ros::param::get("/rasendriya/wp_drop_first", wp_drop_first);
 	ros::param::get("/rasendriya/wp_drop_second", wp_drop_second);
 	ros::param::get("/rasendriya/wp_prepare_scan", wp_prepare_scan);
-	int wp_drop[2] = [wp_drop_first, wp_drop_second];
+	int wp_drop[2] = {wp_drop_first, wp_drop_second};
 
 	// first WP loading from FCU. Ensures that companion computer has the same waypoints as FCU
 	while(ros::ok()) {
