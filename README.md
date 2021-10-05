@@ -14,21 +14,21 @@ Mission 2 also similar to mission 1. But instead of flying in oval track, the pl
 There's so many branch because I'm still learning programming when creating this ROS program, so the program always got updated to be more efficent and sophisticated. I don't want to delete the older version because it has some good programming example. To avoid confusion, I will explain what's the difference between every branch:
 #### "main" branch
 This is the program I originally want to use for the flight testing and even to the final competition. Feature:
-- Waypoint manipulator API
+- Waypoint manipulator API  
 Manipulate waypoint in pixhawk when flying using this API. It feels like "automated GCS". It can swap, erase, and insert waypoints
-- Write waypoint API
+- Write waypoint API  
 Create servo dropping waypoint autonomously when flying.
 #### "simpler" branch
 This is the program I thought in day 5 of the competition, because how prone to fail image processing can be. Feature:
-- Waypoint rewrite
+- Waypoint rewrite  
 Rewrite some waypoint values (like latitude and longitude). If the image processing fails to get the coordinate, it still uses default coordinate GCS write before launch. 
 #### "azure" branch
 This is the branch I created when Microsoft agree to be AUAV sponsor. Feature:
-- Azure IoT Hub
+- Azure IoT Hub  
 Sending ROS data directly from pixhawk to Azure IoT Hub in real-time. Works by dumping data into JSON format first and then send it into Azure cloud.
 #### "complex" branch
-This is the first rasendriya program I created because I don't know how ROS/C++ works so I just imitate and modify AUAV VTOL Athena ROS program (you can look at github.com/vtol-auav-ui/athena, forked from Kevin Yosral). Turns out I don't need to create class because the mission program isn't as complex as it seems. Feature:
-- C++ Class
+This is the first rasendriya program I created because I don't know how ROS/C++ works so I just imitate and modify AUAV VTOL Athena ROS program (you can look at github.com/vtol-auav-ui/athena, forked from Kevin Yosral). Turns out I don't need to create class because the mission program isn't as complex as it seems. Feature:  
+- C++ Class  
 Good example to learn OOP :)
 
 
@@ -64,7 +64,7 @@ If dropzone coordinate is found, then the program will command pixhawk to repeat
 #### SSH
 Check SSH running  
   `sudo systemctl status sshd`  
-Start SSH
+Start SSH  
   `sudo systemctl enable ssh`  
   `sudo systemctl start ssh`  
 
@@ -88,11 +88,6 @@ For odroid:
 `ssh odroid@10.107.213.213`  
 
 ### ROS
-MAVROS:  
-`roslaunch mavros apm.launch`  
-Mission 1:
-`roslaunch rasendriya mission1.launch`  
-Mission 2:
 `roslaunch rasendriya mission2.launch`  
 
 ### ngrok
