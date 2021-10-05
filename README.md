@@ -21,7 +21,7 @@ Create servo dropping waypoint autonomously when flying.
 #### "simpler" branch
 This is the program I thought in day 5 of the competition, because how prone to fail image processing can be. Feature:
 - Waypoint rewrite  
-Rewrite some waypoint values (like latitude and longitude). If the image processing fails to get the coordinate, it still uses default coordinate GCS write before launch. 
+Rewrite some waypoint values (like latitude and longitude). If the image processing fails to get the coordinate, it still uses default coordinate that GCS written before launch. 
 #### "azure" branch
 This is the branch I created when Microsoft agree to be AUAV sponsor. Feature:
 - Azure IoT Hub  
